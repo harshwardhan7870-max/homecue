@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HomeCue – Your AI Home Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Favicon placeholder – replace with your own -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>" />
+</head>
+<body>
+
+  <!-- ===== App Shell ===== -->
+  <div class="app-shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="logo">🏠 HomeCue</span>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <p class="nav-label">Quick Prompts</p>
+        <button class="quick-prompt" data-prompt="Create my morning routine for a weekday">☀️ Morning Routine</button>
+        <button class="quick-prompt" data-prompt="Give me a weekend house-cleaning checklist">🧹 Cleaning Checklist</button>
+        <button class="quick-prompt" data-prompt="Help me plan a grocery shopping list for the week">🛒 Grocery List</button>
+        <button class="quick-prompt" data-prompt="Remind me of common home maintenance tasks for October">🔧 Home Maintenance</button>
+        <button class="quick-prompt" data-prompt="Plan a relaxing evening at home for tonight">🌙 Evening Wind-down</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p class="tagline">Prototype · Alexa+ Hackathon</p>
+      </div>
+    </aside>
+
+    <!-- Main Area -->
+    <main class="main-area">
+
+      <!-- Top bar -->
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open sidebar">☰</button>
+        <h1 class="topbar-title">HomeCue</h1>
+        <button class="clear-btn" id="clearBtn" title="Clear conversation">🗑 Clear</button>
+      </header>
+
+      <!-- Chat Window -->
+      <section class="chat-window" id="chatWindow" aria-live="polite" aria-label="Conversation">
+        <!-- Welcome message injected by app.js -->
+      </section>
+
+      <!-- Input Bar -->
+      <footer class="input-bar">
+        <label for="userInput" class="sr-only">Type your request</label>
+        <textarea
+          id="userInput"
+          class="input-field"
+          placeholder="Ask HomeCue anything… e.g. 'Plan my Saturday cleaning schedule'"
+          rows="1"
+          maxlength="500"
+          autocomplete="off"
+          spellcheck="true"
+        ></textarea>
+        <button class="send-btn" id="sendBtn" aria-label="Send message">
+          <span class="send-icon">➤</span>
+        </button>
+      </footer>
+
+    </main>
+  </div><!-- /.app-shell -->
+
+  <script src="app.js"></script>
+</body>
+</html>

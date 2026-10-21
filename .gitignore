@@ -1,0 +1,15 @@
+# Python virtual environment – never commit this to GitHub
+.venv/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor folders
+.vscode/
+.idea/
+
+# Local environment files
+*.env
+.env.local

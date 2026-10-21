@@ -1,0 +1,497 @@
+/* ============================================================
+   HomeCue – style.css
+   A conversational AI home assistant UI
+   ============================================================ */
+
+/* ---------- CSS Custom Properties ---------- */
+:root {
+  --clr-bg:         #f5f6fa;
+  --clr-surface:    #ffffff;
+  --clr-sidebar:    #1e1e2e;
+  --clr-sidebar-fg: #cdd6f4;
+  --clr-primary:    #7c6ff7;      /* soft violet */
+  --clr-primary-dk: #5b53d6;
+  --clr-user-bubble: #7c6ff7;
+  --clr-bot-bubble:  #e8e9f8;
+  --clr-user-fg:    #ffffff;
+  --clr-bot-fg:     #1e1e2e;
+  --clr-border:     #e0e2f0;
+  --clr-muted:      #8e93b0;
+  --clr-danger:     #e05252;
+
+  --sidebar-w:      260px;
+  --topbar-h:       56px;
+  --inputbar-h:     70px;
+
+  --radius-sm:      8px;
+  --radius-md:      14px;
+  --radius-lg:      20px;
+
+  --font-sans:      'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono:      'Cascadia Code', 'Consolas', monospace;
+
+  --transition:     0.22s ease;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-sans);
+  background: var(--clr-bg);
+  color: var(--clr-bot-fg);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+textarea {
+  font-family: inherit;
+  resize: none;
+}
+
+/* Screen-reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+   LAYOUT – App Shell
+   ============================================================ */
+.app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--clr-sidebar);
+  color: var(--clr-sidebar-fg);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow-y: auto;
+  transition: transform var(--transition);
+  z-index: 200;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+
+.sidebar-close {
+  display: none; /* shown only on mobile */
+  color: var(--clr-sidebar-fg);
+  font-size: 1.1rem;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+
+.sidebar-close:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.sidebar-nav {
+  padding: 16px 12px;
+  flex: 1;
+}
+
+.nav-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--clr-muted);
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.quick-prompt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  border-radius: var(--radius-sm);
+  color: var(--clr-sidebar-fg);
+  font-size: 0.88rem;
+  transition: background var(--transition), color var(--transition);
+}
+
+.quick-prompt:hover {
+  background: rgba(124, 111, 247, 0.25);
+  color: #fff;
+}
+
+.quick-prompt:active {
+  background: rgba(124, 111, 247, 0.45);
+}
+
+.sidebar-footer {
+  padding: 14px 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.tagline {
+  font-size: 0.72rem;
+  color: var(--clr-muted);
+  text-align: center;
+}
+
+/* ============================================================
+   MAIN AREA
+   ============================================================ */
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--clr-bg);
+}
+
+/* ---------- Topbar ---------- */
+.topbar {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 18px;
+  background: var(--clr-surface);
+  border-bottom: 1px solid var(--clr-border);
+  flex-shrink: 0;
+}
+
+.menu-toggle {
+  display: none; /* shown on mobile */
+  font-size: 1.3rem;
+  color: var(--clr-primary);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+
+.menu-toggle:hover {
+  background: var(--clr-bg);
+}
+
+.topbar-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  flex: 1;
+  letter-spacing: 0.3px;
+}
+
+.clear-btn {
+  font-size: 0.82rem;
+  color: var(--clr-muted);
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-border);
+  transition: background var(--transition), color var(--transition);
+}
+
+.clear-btn:hover {
+  background: #fff0f0;
+  color: var(--clr-danger);
+  border-color: var(--clr-danger);
+}
+
+/* ---------- Chat Window ---------- */
+.chat-window {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 20px;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* scrollbar */
+.chat-window::-webkit-scrollbar { width: 5px; }
+.chat-window::-webkit-scrollbar-track { background: transparent; }
+.chat-window::-webkit-scrollbar-thumb { background: var(--clr-border); border-radius: 4px; }
+
+/* ============================================================
+   CHAT BUBBLES
+   ============================================================ */
+.message {
+  display: flex;
+  flex-direction: column;
+  max-width: min(680px, 88%);
+  animation: fadeUp 0.25s ease forwards;
+}
+
+.message.user { align-self: flex-end; align-items: flex-end; }
+.message.bot  { align-self: flex-start; align-items: flex-start; }
+
+.bubble {
+  padding: 11px 16px;
+  border-radius: var(--radius-lg);
+  font-size: 0.93rem;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.message.user .bubble {
+  background: var(--clr-user-bubble);
+  color: var(--clr-user-fg);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.message.bot .bubble {
+  background: var(--clr-bot-bubble);
+  color: var(--clr-bot-fg);
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+.bubble-label {
+  font-size: 0.7rem;
+  color: var(--clr-muted);
+  margin-bottom: 4px;
+  padding: 0 4px;
+}
+
+/* ---------- Structured content inside bot bubble ---------- */
+.bubble h3 {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: var(--clr-primary-dk);
+}
+
+.bubble ul, .bubble ol {
+  padding-left: 20px;
+  margin-top: 4px;
+}
+
+.bubble li {
+  margin-bottom: 4px;
+}
+
+.bubble .section-title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  color: var(--clr-primary-dk);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Task checklist items */
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.06);
+}
+
+.task-item:last-child { border-bottom: none; }
+
+.task-item input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--clr-primary);
+  flex-shrink: 0;
+  width: 15px; height: 15px;
+  cursor: pointer;
+}
+
+.task-item label {
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color var(--transition), text-decoration var(--transition);
+}
+
+.task-item input:checked + label {
+  color: var(--clr-muted);
+  text-decoration: line-through;
+}
+
+/* ---------- Typing indicator ---------- */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 16px;
+  background: var(--clr-bot-bubble);
+  border-radius: var(--radius-lg);
+  border-bottom-left-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.typing-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--clr-muted);
+  animation: bounce 1.1s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.18s; }
+.typing-dot:nth-child(3) { animation-delay: 0.36s; }
+
+/* ---------- Welcome card ---------- */
+.welcome-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 24px 28px;
+  text-align: center;
+  max-width: 480px;
+  margin: auto;
+  margin-top: 32px;
+}
+
+.welcome-card .emoji {
+  font-size: 2.8rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.welcome-card h2 {
+  font-size: 1.25rem;
+  color: var(--clr-primary);
+  margin-bottom: 6px;
+}
+
+.welcome-card p {
+  font-size: 0.88rem;
+  color: var(--clr-muted);
+}
+
+/* ============================================================
+   INPUT BAR
+   ============================================================ */
+.input-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 12px 20px;
+  background: var(--clr-surface);
+  border-top: 1px solid var(--clr-border);
+}
+
+.input-field {
+  flex: 1;
+  min-height: 44px;
+  max-height: 120px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  font-size: 0.93rem;
+  background: var(--clr-bg);
+  color: var(--clr-bot-fg);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  overflow-y: auto;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(124, 111, 247, 0.15);
+}
+
+.input-field::placeholder { color: var(--clr-muted); }
+
+.send-btn {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--clr-primary);
+  color: #fff;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.send-btn:hover  { background: var(--clr-primary-dk); }
+.send-btn:active { transform: scale(0.94); }
+.send-btn:disabled { background: var(--clr-border); cursor: not-allowed; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+  40%           { transform: scale(1.2); opacity: 1; }
+}
+
+/* ============================================================
+   RESPONSIVE – Mobile (<= 640px)
+   ============================================================ */
+@media (max-width: 640px) {
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.3);
+  }
+
+  .sidebar-close { display: block; }
+  .menu-toggle   { display: block; }
+
+  .chat-window { padding: 16px 12px; }
+  .input-bar   { padding: 10px 12px; }
+
+  .message { max-width: 92%; }
+}
+
+/* Overlay behind sidebar on mobile */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 150;
+}
+
+.sidebar-overlay.active { display: block; }
