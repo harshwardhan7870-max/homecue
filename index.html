@@ -1,74 +1,861 @@
-<!DOCTYPE html>
-<html lang="en">
+CTYPE html>
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HomeCue – Your AI Home Assistant</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Favicon placeholder – replace with your own -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark light">
+<title>HomeCue 3.0 — Private, Accessible Smart Home</title>
+<style>
+:root{
+  --bg:linear-gradient(135deg,#0b1020 0%,#1a1740 50%,#0b1020 100%);
+  --card:rgba(24,33,54,.78);--card2:rgba(255,255,255,.05);--border:rgba(255,255,255,.14);
+  --text:#f1f5f9;--muted:#a5b4c8;--accent:#818cf8;--accent-ink:#0b1020;--focus:#a5b4fc;
+  --ok:#34d399;--warn:#fbbf24;--bad:#fb7185;--cool:#22d3ee;--track:#475569;--shadow:0 8px 30px rgba(0,0,0,.28);
+}
+[data-theme="light"]{
+  --bg:linear-gradient(135deg,#eef2ff 0%,#f8fafc 50%,#e0e7ff 100%);
+  --card:rgba(255,255,255,.9);--card2:rgba(15,23,42,.04);--border:rgba(15,23,42,.16);
+  --text:#0f172a;--muted:#475569;--accent:#4338ca;--accent-ink:#ffffff;--focus:#4338ca;
+  --ok:#047857;--warn:#b45309;--bad:#be123c;--cool:#0e7490;--track:#94a3b8;--shadow:0 8px 30px rgba(15,23,42,.1);
+}
+[data-high-contrast="true"]{--card:#000;--card2:#000;--border:#fff;--text:#fff;--muted:#ffff66;--accent:#ffff00;--accent-ink:#000;--focus:#ffff00;--track:#888;--bg:#000;--ok:#66ff99;--warn:#ffdd00;--bad:#ff8099;--cool:#66e0ff}
+[data-theme="light"][data-high-contrast="true"]{--card:#fff;--card2:#fff;--border:#000;--text:#000;--muted:#0000a0;--accent:#0000c8;--accent-ink:#fff;--focus:#0000c8;--track:#555;--bg:#fff;--ok:#006400;--warn:#7a4a00;--bad:#a00020;--cool:#00608a}
+*{box-sizing:border-box}
+html{font-size:16px}
+body{margin:0;background:var(--bg);background-attachment:fixed;color:var(--text);min-height:100vh;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.45;padding:.75rem}
+[data-dyslexia="true"] body,[data-dyslexia="true"] button,[data-dyslexia="true"] input,[data-dyslexia="true"] select{font-family:"Atkinson Hyperlegible","Comic Sans MS","Trebuchet MS",sans-serif;letter-spacing:.02em}
+@media(min-width:900px){body{padding:1.5rem}}
+.wrap{max-width:84rem;margin:0 auto}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:.5rem;top:-4rem;background:var(--accent);color:var(--accent-ink);padding:.6rem 1rem;border-radius:.6rem;z-index:50;font-weight:700}
+.skip:focus{top:.5rem}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:.5rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:1.1rem;padding:1.1rem;box-shadow:var(--shadow);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+h1,h2,h3{margin:0}
+h2{font-size:1rem;font-weight:650;display:flex;align-items:center;gap:.5rem}
+.muted{color:var(--muted)}.small{font-size:.8rem}.tiny{font-size:.72rem}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.row{display:flex;align-items:center;gap:.6rem}.between{justify-content:space-between}.wrapflex{flex-wrap:wrap}
+.stack{display:flex;flex-direction:column;gap:1rem}
+.btn{min-height:2.75rem;padding:.45rem .9rem;border-radius:.7rem;border:1px solid var(--border);background:var(--card2);color:var(--text);font:inherit;font-weight:600;font-size:.85rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;transition:background .15s,border-color .15s}
+.btn:hover{border-color:var(--accent)}
+.btn[aria-pressed="true"],.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.sm{min-height:2.25rem;padding:.25rem .65rem;font-size:.78rem}
+.btn.icon{min-width:2.75rem;padding:.4rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+[data-big-targets="true"] .btn{min-height:3.5rem;font-size:1rem}
+[data-big-targets="true"] .btn.sm{min-height:3rem}
+input[type=text],input[type=time],input[type=number],select{font:inherit;color:var(--text);background:var(--card2);border:1px solid var(--border);border-radius:.7rem;padding:.55rem .75rem;min-height:2.75rem;width:100%}
+input[type=range]{width:100%;accent-color:var(--accent);height:1.75rem;cursor:pointer}
+input[type=color]{width:2.75rem;height:2.75rem;border:1px solid var(--border);border-radius:.6rem;background:transparent;padding:2px;cursor:pointer}
+.switch{position:relative;width:3.25rem;height:1.9rem;border-radius:999px;background:var(--track);border:1px solid var(--border);cursor:pointer;flex:none;padding:0;transition:background .2s}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:calc(1.9rem - 6px);height:calc(1.9rem - 6px);border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.switch[aria-checked="true"]{background:var(--accent)}
+.switch[aria-checked="true"]::after{transform:translateX(1.35rem)}
+[data-big-targets="true"] .switch{width:4rem;height:2.4rem}
+[data-big-targets="true"] .switch::after{width:calc(2.4rem - 6px);height:calc(2.4rem - 6px)}
+[data-big-targets="true"] .switch[aria-checked="true"]::after{transform:translateX(1.6rem)}
+.grid{display:grid;gap:1rem}
+.main{grid-template-columns:1fr}
+@media(min-width:1024px){.main{grid-template-columns:4fr 5fr 3fr;align-items:start}}
+.scenes{grid-template-columns:repeat(2,1fr);gap:.6rem}
+.scene{text-align:left;padding:.7rem;border-radius:.8rem;border:1px solid var(--border);background:var(--card2);color:var(--text);cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:.15rem;min-height:4.5rem}
+.scene:hover{border-color:var(--accent)}
+.scene b{font-size:.85rem}.scene span.d{font-size:.7rem;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:650;padding:.25rem .65rem;border-radius:999px;border:1px solid var(--border);background:var(--card2)}
+.pill.ok{color:var(--ok)}.pill.warn{color:var(--warn)}.pill.bad{color:var(--bad)}.pill.cool{color:var(--cool)}
+.room{padding:.7rem;border-radius:.8rem;border:1px solid var(--border);background:var(--card2);display:flex;flex-direction:column;gap:.55rem}
+.rooms{grid-template-columns:1fr 1fr;gap:.6rem}
+#chatBox{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:.55rem;padding-right:.25rem;min-height:12rem}
+.msg{padding:.65rem .8rem;border-radius:.8rem;font-size:.85rem;border:1px solid var(--border);max-width:92%;overflow-wrap:anywhere}
+.msg.user{align-self:flex-end;background:color-mix(in srgb,var(--accent) 22%,transparent)}
+.msg.assistant{align-self:flex-start;background:var(--card2)}
+.msg.system{align-self:center;color:var(--muted);font-size:.78rem;text-align:center}
+.chips{display:flex;gap:.4rem;overflow-x:auto;padding:.3rem 0}
+.chip{white-space:nowrap;padding:.4rem .75rem;border-radius:999px;border:1px solid var(--border);background:var(--card2);color:var(--text);font:inherit;font-size:.76rem;cursor:pointer;min-height:2.25rem}
+.chip:hover{border-color:var(--accent)}
+.temp{font-size:2.8rem;font-weight:800;letter-spacing:-.02em;color:var(--cool);line-height:1}
+.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.4rem}
+.li{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.4rem .6rem;border-radius:.7rem;border:1px solid var(--border);background:var(--card2);font-size:.82rem}
+.li.done label{text-decoration:line-through;color:var(--muted)}
+.li input[type=checkbox]{width:1.2rem;height:1.2rem;accent-color:var(--accent);flex:none}
+.li label{flex:1;cursor:pointer;padding:.35rem 0}
+.bar{height:.6rem;border-radius:99px;background:var(--card2);border:1px solid var(--border);overflow:hidden}
+.bar>div{height:100%;background:var(--ok);width:0;transition:width .3s}
+pre.log{margin:0;max-height:15rem;overflow:auto;background:rgba(0,0,0,.35);color:#86efac;border:1px solid var(--border);border-radius:.8rem;padding:.7rem;font-size:.68rem;line-height:1.5}
+[data-theme="light"] pre.log{background:#0f172a}
+#toast{position:fixed;left:50%;bottom:1.25rem;transform:translateX(-50%);z-index:40;display:flex;gap:.75rem;align-items:center;background:var(--text);color:var(--bg);background:var(--text);padding:.65rem .9rem;border-radius:.9rem;box-shadow:var(--shadow);max-width:92vw;font-size:.85rem}
+#toast[hidden]{display:none}
+#toast .btn{min-height:2rem;background:var(--accent);color:var(--accent-ink);border-color:transparent}
+#alertBar{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--bad);color:#fff;padding:.8rem 1rem;border-radius:.9rem;margin-bottom:1rem;font-weight:650}
+#alertBar[hidden]{display:none}
+[data-theme="light"] #alertBar{color:#fff}
+dialog{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:1.1rem;padding:1.25rem;max-width:34rem;width:calc(100% - 2rem);box-shadow:var(--shadow)}
+[data-theme="dark"] dialog{background:#141b2f}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+fieldset{border:1px solid var(--border);border-radius:.8rem;margin:0 0 .9rem;padding:.7rem .9rem}
+legend{font-weight:650;font-size:.82rem;padding:0 .4rem}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.35rem 0}
+.radios{display:flex;gap:.4rem;flex-wrap:wrap}
+.radios label{display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .7rem;border:1px solid var(--border);border-radius:.7rem;cursor:pointer;font-size:.82rem}
+.radios input:checked+span{font-weight:800;color:var(--accent)}
+kbd{font-family:ui-monospace,monospace;font-size:.75rem;padding:.1rem .4rem;border-radius:.35rem;border:1px solid var(--border);background:var(--card2)}
+svg#spark{width:100%;height:2.4rem;display:block}
+.rec{animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(251,113,133,.6)}70%{box-shadow:0 0 0 10px rgba(251,113,133,0)}}
+[data-reduce-motion="true"] *{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(forced-colors:active){.switch{border:2px solid ButtonText}.switch[aria-checked="true"]{background:Highlight}.card{border:1px solid CanvasText}}
+</style>
 </head>
 <body>
-
-  <!-- ===== App Shell ===== -->
-  <div class="app-shell">
-
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <span class="logo">🏠 HomeCue</span>
-        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+<a class="skip" href="#main">Skip to controls</a>
+<div id="srAnnouncer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+ 
+<div class="wrap">
+<header class="card row between wrapflex" style="margin-bottom:1rem">
+  <div class="row">
+    <div aria-hidden="true" style="width:2.6rem;height:2.6rem;border-radius:.8rem;background:linear-gradient(135deg,#6366f1,#a855f7);display:grid;place-items:center;font-size:1.3rem">🏠</div>
+    <div>
+      <h1 style="font-size:1.35rem;font-weight:800">HomeCue <span class="pill ok" style="vertical-align:middle">3.0</span></h1>
+      <div class="small muted">Private, accessible smart-home control. Runs entirely in your browser.</div>
+    </div>
+  </div>
+  <div class="row wrapflex">
+    <span class="pill ok" title="No account, no cloud. Your data never leaves this device.">🔒 Local-first</span>
+    <span class="pill warn" title="Devices in this build are simulated">🧪 Simulated devices</span>
+    <button class="btn sm" id="undoBtn" aria-label="Undo last change (Ctrl+Z)" disabled>↶ Undo</button>
+    <button class="btn sm icon" id="themeBtn" aria-label="Cycle theme (Alt+T)">🌓</button>
+    <button class="btn sm icon" id="helpBtn" aria-label="Keyboard shortcuts (?)">⌨️</button>
+    <button class="btn sm" id="settingsBtn">⚙️ Settings</button>
+  </div>
+</header>
+ 
+<div id="alertBar" role="alert" hidden><span id="alertText"></span><button class="btn sm" id="alertClose">Dismiss</button></div>
+ 
+<main id="main" class="grid main" tabindex="-1">
+ 
+<!-- LEFT -->
+<section class="stack" aria-label="Scenes, assistant and media">
+  <div class="card">
+    <h2><span aria-hidden="true">✨</span> Scenes</h2>
+    <div id="scenes" class="grid scenes" style="margin-top:.8rem"></div>
+  </div>
+ 
+  <div class="card" style="display:flex;flex-direction:column;height:34rem">
+    <div class="row between" style="padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:.6rem">
+      <h2><span aria-hidden="true">💬</span> Smart Command <span class="pill" title="A rule-based parser that runs on your device. No AI service is called.">on-device</span></h2>
+      <button class="btn sm" id="clearChat" aria-label="Clear chat (Alt+C)">Clear</button>
+    </div>
+    <div id="chatBox" role="log" aria-live="polite" aria-label="Conversation"></div>
+    <div id="voiceStatus" class="row between small" hidden style="margin:.4rem 0;padding:.5rem .7rem;border:1px solid var(--bad);border-radius:.7rem;color:var(--bad)"><span id="voiceText">Listening…</span></div>
+    <div class="chips" id="chips" aria-label="Suggested commands"></div>
+    <form id="chatForm" class="row" style="padding-top:.5rem;border-top:1px solid var(--border)">
+      <button type="button" class="btn primary icon" id="micBtn" aria-label="Voice input (Alt+M)">🎤</button>
+      <label for="userInput" class="sr-only">Type a command</label>
+      <input type="text" id="userInput" placeholder='Try "dim the kitchen to 30% and lock the door"' autocomplete="off" enterkeyhint="send">
+      <button type="submit" class="btn primary icon" aria-label="Send">➤</button>
+    </form>
+  </div>
+ 
+  <div class="card">
+    <div class="row between"><h2><span aria-hidden="true">🎵</span> Media</h2><span id="nowPlaying" class="small muted">Nothing playing</span></div>
+    <div class="row" style="margin-top:.7rem">
+      <button class="btn" id="mediaBtn" aria-pressed="false">▶ Play</button>
+      <label for="volSlider" class="small muted">Volume</label>
+      <input type="range" id="volSlider" min="0" max="100" aria-describedby="volVal"><span id="volVal" class="small mono" style="width:2.5rem;text-align:right"></span>
+    </div>
+  </div>
+</section>
+ 
+<!-- CENTER -->
+<section class="stack" aria-label="Device controls">
+  <div class="card stack" style="gap:.9rem">
+    <div class="row between">
+      <h2><span aria-hidden="true">💡</span> Lighting</h2>
+      <button class="btn sm" id="masterBtn">All off</button>
+    </div>
+    <div>
+      <div class="row between small"><label for="brightness">Brightness</label><span id="brightVal" class="mono"></span></div>
+      <input type="range" id="brightness" min="0" max="100">
+    </div>
+    <div id="rooms" class="grid rooms"></div>
+  </div>
+ 
+  <div class="card stack" style="gap:.9rem">
+    <div class="row between"><h2><span aria-hidden="true">🌡️</span> Climate</h2><span id="hvacChip" class="pill cool">Idle</span></div>
+    <div class="row between" style="justify-content:space-around;padding:.3rem 0">
+      <button class="btn icon" id="tempDown" aria-label="Lower target temperature">−</button>
+      <div style="text-align:center">
+        <div id="tempVal" class="temp mono" aria-live="polite"></div>
+        <div id="ambientVal" class="small muted" style="margin-top:.35rem"></div>
       </div>
-
-      <nav class="sidebar-nav">
-        <p class="nav-label">Quick Prompts</p>
-        <button class="quick-prompt" data-prompt="Create my morning routine for a weekday">☀️ Morning Routine</button>
-        <button class="quick-prompt" data-prompt="Give me a weekend house-cleaning checklist">🧹 Cleaning Checklist</button>
-        <button class="quick-prompt" data-prompt="Help me plan a grocery shopping list for the week">🛒 Grocery List</button>
-        <button class="quick-prompt" data-prompt="Remind me of common home maintenance tasks for October">🔧 Home Maintenance</button>
-        <button class="quick-prompt" data-prompt="Plan a relaxing evening at home for tonight">🌙 Evening Wind-down</button>
-      </nav>
-
-      <div class="sidebar-footer">
-        <p class="tagline">Prototype · Alexa+ Hackathon</p>
-      </div>
-    </aside>
-
-    <!-- Main Area -->
-    <main class="main-area">
-
-      <!-- Top bar -->
-      <header class="topbar">
-        <button class="menu-toggle" id="menuToggle" aria-label="Open sidebar">☰</button>
-        <h1 class="topbar-title">HomeCue</h1>
-        <button class="clear-btn" id="clearBtn" title="Clear conversation">🗑 Clear</button>
-      </header>
-
-      <!-- Chat Window -->
-      <section class="chat-window" id="chatWindow" aria-live="polite" aria-label="Conversation">
-        <!-- Welcome message injected by app.js -->
-      </section>
-
-      <!-- Input Bar -->
-      <footer class="input-bar">
-        <label for="userInput" class="sr-only">Type your request</label>
-        <textarea
-          id="userInput"
-          class="input-field"
-          placeholder="Ask HomeCue anything… e.g. 'Plan my Saturday cleaning schedule'"
-          rows="1"
-          maxlength="500"
-          autocomplete="off"
-          spellcheck="true"
-        ></textarea>
-        <button class="send-btn" id="sendBtn" aria-label="Send message">
-          <span class="send-icon">➤</span>
-        </button>
-      </footer>
-
-    </main>
-  </div><!-- /.app-shell -->
-
-  <script src="app.js"></script>
+      <button class="btn icon" id="tempUp" aria-label="Raise target temperature">+</button>
+    </div>
+    <div class="modes" role="group" aria-label="Climate mode" id="modes"></div>
+  </div>
+ 
+  <div class="card stack" style="gap:.9rem">
+    <div class="row between"><h2><span aria-hidden="true">🛡️</span> Security</h2><span id="alarmChip" class="pill ok">Disarmed</span></div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:.6rem">
+      <button class="btn" id="lockBtn" aria-pressed="false" style="justify-content:space-between;text-align:left"><span><b>Front door</b><br><span id="lockLabel" class="small"></span></span><span id="lockIcon" aria-hidden="true" style="font-size:1.4rem"></span></button>
+      <button class="btn" id="alarmBtn" aria-pressed="false" style="justify-content:space-between;text-align:left"><span><b>Alarm</b><br><span id="alarmLabel" class="small"></span></span><span id="alarmIcon" aria-hidden="true" style="font-size:1.4rem"></span></button>
+    </div>
+    <div style="border:1px dashed var(--border);border-radius:.8rem;padding:.8rem" class="row between wrapflex">
+      <div><b class="small">Front porch sensor</b><div class="tiny muted">Demo: no real camera is connected</div></div>
+      <button class="btn sm" id="motionBtn">Simulate motion</button>
+    </div>
+  </div>
+</section>
+ 
+<!-- RIGHT -->
+<section class="stack" aria-label="Insights, routines and automations">
+  <div class="card stack" style="gap:.7rem">
+    <h2><span aria-hidden="true">⚡</span> Energy <span class="pill">estimate</span></h2>
+    <div class="row between"><div><div id="wattsNow" class="mono" style="font-size:1.6rem;font-weight:800"></div><div class="tiny muted">current draw</div></div><div style="text-align:right"><div id="costDay" class="mono" style="font-weight:700"></div><div class="tiny muted">if held for 24 h</div></div></div>
+    <svg id="spark" viewBox="0 0 120 32" preserveAspectRatio="none" role="img" aria-label="Recent power draw trend"></svg>
+    <div id="energyTip" class="small muted"></div>
+  </div>
+ 
+  <div class="card stack" style="gap:.7rem">
+    <div class="row between"><h2><span aria-hidden="true">✅</span> Routines</h2><button class="btn sm" id="resetRoutine" aria-label="Uncheck all tasks">Reset</button></div>
+    <label for="routineSelect" class="sr-only">Routine</label>
+    <select id="routineSelect"></select>
+    <div><div class="row between tiny muted"><span>Progress</span><span id="routineText" class="mono"></span></div><div class="bar" role="progressbar" aria-label="Routine progress" id="routineBarWrap" aria-valuemin="0" aria-valuemax="100"><div id="routineBar"></div></div></div>
+    <ul id="checklist" class="list" style="max-height:14rem;overflow:auto"></ul>
+    <form id="addTaskForm" class="row"><label for="newTask" class="sr-only">New task</label><input type="text" id="newTask" placeholder="Add a task…" autocomplete="off"><button class="btn primary icon" aria-label="Add task">+</button></form>
+  </div>
+ 
+  <div class="card stack" style="gap:.7rem">
+    <h2><span aria-hidden="true">⏰</span> Automations</h2>
+    <ul id="autoList" class="list"></ul>
+    <form id="autoForm" class="row wrapflex"><label for="autoTime" class="sr-only">Time</label><input type="time" id="autoTime" value="07:00" style="flex:1;min-width:6.5rem"><label for="autoScene" class="sr-only">Scene</label><select id="autoScene" style="flex:2;min-width:8rem"></select><button class="btn primary icon" aria-label="Add automation">+</button></form>
+    <div class="tiny muted">Runs while HomeCue is open.</div>
+  </div>
+ 
+  <div class="card stack" style="gap:.6rem">
+    <div class="row between"><h2><span aria-hidden="true">🧾</span> Activity log</h2><div class="row"><button class="btn sm" id="copyLog">Copy</button><button class="btn sm" id="clearLog">Clear</button></div></div>
+    <div class="row between tiny muted mono"><span>Events: <b id="reqCount">0</b></span><span>Avg latency: <b id="avgLat">0.0</b> ms</span></div>
+    <pre id="mcpLog" class="log" tabindex="0" role="region" aria-label="Activity log, scrollable">{ "status": "ready" }</pre>
+  </div>
+</section>
+</main>
+ 
+<footer class="small muted" style="text-align:center;padding:1.2rem 0">HomeCue 3.0 · Data stays on this device · Press <kbd>?</kbd> for shortcuts</footer>
+</div>
+ 
+<div id="toast" role="status" hidden><span id="toastMsg"></span><button class="btn sm" id="toastUndo" hidden>Undo</button></div>
+ 
+<dialog id="settingsDlg" aria-labelledby="settingsTitle">
+  <form method="dialog">
+    <div class="row between" style="margin-bottom:.8rem"><h2 id="settingsTitle" style="font-size:1.15rem">Settings</h2><button class="btn sm" value="close">Done</button></div>
+  </form>
+  <div style="max-height:70vh;overflow:auto;padding:.1rem">
+    <fieldset><legend>Theme</legend><div class="radios" id="themeRadios"></div></fieldset>
+    <fieldset><legend>Text size</legend><div class="radios" id="fontRadios"></div></fieldset>
+    <fieldset><legend>Accessibility</legend><div id="a11yOpts"></div></fieldset>
+    <fieldset><legend>Units and energy</legend>
+      <div class="opt"><span id="lblUnit">Temperature unit</span><div class="radios" id="unitRadios"></div></div>
+      <div class="opt"><label for="rateInput">Price per kWh</label><div class="row"><input type="text" id="curInput" maxlength="3" style="width:4rem" aria-label="Currency symbol"><input type="number" id="rateInput" min="0" step="0.01" style="width:6rem"></div></div>
+    </fieldset>
+    <fieldset><legend>Your data</legend>
+      <div class="row wrapflex"><button class="btn sm" id="exportBtn">Export JSON</button><label class="btn sm" for="importFile">Import JSON</label><input type="file" id="importFile" accept="application/json" class="sr-only"><button class="btn sm" id="resetAll" style="color:var(--bad)">Reset everything</button></div>
+    </fieldset>
+  </div>
+</dialog>
+ 
+<dialog id="helpDlg" aria-labelledby="helpTitle">
+  <form method="dialog"><div class="row between" style="margin-bottom:.8rem"><h2 id="helpTitle" style="font-size:1.15rem">Keyboard shortcuts</h2><button class="btn sm">Close</button></div></form>
+  <ul class="list">
+    <li class="li"><span>Focus the command box</span><kbd>/</kbd></li>
+    <li class="li"><span>Voice input</span><kbd>Alt</kbd>+<kbd>M</kbd></li>
+    <li class="li"><span>Cycle theme</span><kbd>Alt</kbd>+<kbd>T</kbd></li>
+    <li class="li"><span>Clear chat</span><kbd>Alt</kbd>+<kbd>C</kbd></li>
+    <li class="li"><span>Undo last change</span><kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Z</kbd></li>
+    <li class="li"><span>This help</span><kbd>?</kbd></li>
+  </ul>
+  <p class="small muted">Sensitive voice commands (unlock, disarm) always ask you to confirm first.</p>
+</dialog>
+ 
+<script>
+'use strict';
+/* =====================================================================
+   HomeCue 3.0
+   - Local-first: state lives in localStorage; no network calls.
+   - One command engine for chat, voice, and chips (multi-command, negation,
+     questions, confirmations for sensitive actions, honest failures).
+   - Everything is undoable. Everything is announced to screen readers.
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+function el(tag, props = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  kids.flat().forEach(c => c != null && e.append(c));
+  return e;
+}
+const clampN = (n, a, b) => Math.min(b, Math.max(a, n));
+const mq = q => (window.matchMedia ? window.matchMedia(q) : { matches: false, addEventListener() {} });
+ 
+const KEY = 'homecue.v3';
+const ROOM_NAMES = { living: 'Living Room', kitchen: 'Kitchen', bedroom: 'Bedroom', office: 'Office' };
+const ROOM_ALIAS = { living: /\b(living|lounge)\b/, kitchen: /\bkitchen\b/, bedroom: /\bbed ?room\b/, office: /\b(office|study)\b/ };
+const COLORS = { red: '#ef4444', orange: '#f97316', yellow: '#facc15', green: '#22c55e', blue: '#3b82f6', purple: '#a855f7', pink: '#ec4899', white: '#ffffff', warm: '#f59e0b', cool: '#bfdbfe' };
+const PARTY = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#a855f7', '#ec4899'];
+const MODES = { cool: 'Cool', heat: 'Heat', auto: 'Auto', eco: 'Eco' };
+const ROUTINE_ALIAS = [[/morning|wake/, 'Morning Routine'], [/evening|wind|night/, 'Evening Wind-down'], [/clean/, 'Cleaning Checklist'], [/grocer|shopping/, 'Grocery List'], [/maint|repair/, 'Home Maintenance']];
+ 
+const T = (arr) => arr.map(t => ({ t, done: false }));
+const defaults = () => ({
+  dev: {
+    rooms: { living: { on: true, color: '#f59e0b' }, kitchen: { on: true, color: '#60a5fa' }, bedroom: { on: false, color: '#f472b6' }, office: { on: true, color: '#34d399' } },
+    brightness: 80, target: 72, ambient: 78, mode: 'cool', locked: true, armed: false, nowPlaying: null, volume: 40, party: false
+  },
+  prefs: { theme: 'auto', contrast: mq('(prefers-contrast: more)').matches, font: 16, reduceMotion: mq('(prefers-reduced-motion: reduce)').matches, dyslexia: false, bigTargets: false, tts: true, unit: 'F', rate: 0.15, cur: '$' },
+  routines: {
+    'Evening Wind-down': T(['Wash dishes and tidy kitchen', 'Prepare clothes for tomorrow', 'Dim lights and relax', 'Set security alarm']),
+    'Morning Routine': T(['Drink a glass of water', 'Five-minute stretch', 'Check weather forecast', 'Review day schedule']),
+    'Cleaning Checklist': T(['Tidy living room', 'Wipe kitchen counters', 'Clean bathroom', 'Vacuum main hall']),
+    'Grocery List': T(['Check fridge: milk & eggs', 'List fresh produce', 'Check household soap', 'Order delivery']),
+    'Home Maintenance': T(['Check smoke detectors', 'Inspect door locks', 'Check water filter', 'Clean HVAC vents'])
+  },
+  activeRoutine: 'Evening Wind-down',
+  automations: [{ id: 1, time: '22:30', scene: 'alloff', on: true, last: '' }]
+});
+ 
+function merge(raw) {
+  const d = defaults();
+  if (!raw || typeof raw !== 'object') return d;
+  if (raw.dev && typeof raw.dev === 'object') {
+    const rooms = Object.assign({}, d.dev.rooms);
+    for (const k of Object.keys(ROOM_NAMES)) if (raw.dev.rooms && raw.dev.rooms[k]) rooms[k] = { on: !!raw.dev.rooms[k].on, color: /^#[0-9a-f]{6}$/i.test(raw.dev.rooms[k].color) ? raw.dev.rooms[k].color : rooms[k].color };
+    Object.assign(d.dev, raw.dev, { rooms });
+  }
+  if (raw.prefs) Object.assign(d.prefs, raw.prefs);
+  if (raw.routines && typeof raw.routines === 'object') {
+    const r = {};
+    for (const [name, tasks] of Object.entries(raw.routines)) if (Array.isArray(tasks)) r[name] = tasks.filter(x => x && typeof x.t === 'string').map(x => ({ t: x.t.slice(0, 120), done: !!x.done }));
+    if (Object.keys(r).length) d.routines = r;
+  }
+  if (raw.activeRoutine && d.routines[raw.activeRoutine]) d.activeRoutine = raw.activeRoutine; else d.activeRoutine = Object.keys(d.routines)[0];
+  if (Array.isArray(raw.automations)) d.automations = raw.automations.filter(a => a && /^\d\d:\d\d$/.test(a.time)).map((a, i) => ({ id: a.id || i + 1, time: a.time, scene: a.scene, on: !!a.on, last: '' }));
+  return d;
+}
+let S;
+try { S = merge(JSON.parse(localStorage.getItem(KEY) || 'null')); } catch (_) { S = defaults(); }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (_) {} }
+ 
+/* ---------- units ---------- */
+const f2c = f => (f - 32) * 5 / 9;
+const disp = f => S.prefs.unit === 'C' ? Math.round(f2c(f) * 2) / 2 : Math.round(f);
+const fmt = f => `${disp(f)}°${S.prefs.unit}`;
+const toF = (v, unit) => unit === 'C' ? Math.round(v * 9 / 5 + 32) : Math.round(v);
+ 
+/* ---------- scenes ---------- */
+const eachRoom = (d, fn) => Object.keys(d.rooms).forEach((k, i) => fn(d.rooms[k], k, i));
+const SCENES = {
+  movie: { icon: '🎬', name: 'Movie Night', desc: 'Lights 10% warm · 70°F', match: /\bmovie\b/, apply(d) { d.brightness = 10; eachRoom(d, (r, k) => { r.on = k === 'living'; r.color = '#f59e0b'; }); d.target = 70; d.nowPlaying = null; } },
+  focus: { icon: '🧠', name: 'Focus', desc: 'Cool white · 72°F', match: /\bfocus\b/, apply(d) { d.brightness = 90; eachRoom(d, (r, k) => { r.on = k === 'office' || k === 'living'; r.color = '#dbeafe'; }); d.target = 72; d.nowPlaying = null; } },
+  party: { icon: '🎉', name: 'Party', desc: 'Color cycle · music', match: /\bparty\b/, apply(d) { d.brightness = 100; eachRoom(d, (r, k, i) => { r.on = true; r.color = PARTY[i]; }); d.nowPlaying = 'Party Mix'; d.volume = 60; d.party = true; } },
+  alloff: { icon: '🌙', name: 'All Off', desc: 'Lights off · lock · arm', match: /\ball off\b|\bgood ?night\b|\bbed ?time\b|\bshut ?down\b/, apply(d) { eachRoom(d, r => { r.on = false; }); d.locked = true; d.armed = true; d.nowPlaying = null; d.target = 68; } },
+  morning: { icon: '☀️', name: 'Good Morning', desc: 'Lights 70% · disarm · 71°F', match: /\bgood morning\b|\bwake up\b/, apply(d) { d.brightness = 70; eachRoom(d, (r, k) => { r.on = k === 'kitchen' || k === 'living'; r.color = '#fde68a'; }); d.armed = false; d.target = 71; } },
+  away: { icon: '🚪', name: 'Away', desc: 'Lights off · lock · eco', match: /\b(i'?m (leaving|going out)|away mode|leaving (home|the house))\b/, apply(d) { eachRoom(d, r => { r.on = false; }); d.locked = true; d.armed = true; d.mode = 'eco'; d.nowPlaying = null; } }
+};
+ 
+/* ---------- announce / toast / alert ---------- */
+function announce(msg) { const a = $('#srAnnouncer'); a.textContent = ''; setTimeout(() => { a.textContent = msg; }, 30); }
+function speak(text) {
+  if (!S.prefs.tts || !('speechSynthesis' in window)) return;
+  try { speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(text)); } catch (_) {}
+}
+let toastTimer;
+function toast(msg, { undo = false } = {}) {
+  $('#toastMsg').textContent = msg; $('#toastUndo').hidden = !undo; $('#toast').hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('#toast').hidden = true; }, 6000);
+}
+function showAlert(msg) { $('#alertText').textContent = msg; $('#alertBar').hidden = false; announce(msg); speak(msg); }
+ 
+/* ---------- activity log (real latency, not a fake number) ---------- */
+const mcp = { n: 0, total: 0, logs: [] };
+function logEvent(operation, params, response, ms) {
+  mcp.n++; mcp.total += ms || 0;
+  mcp.logs.unshift({ timestamp: new Date().toISOString(), request_id: `evt-${String(mcp.n).padStart(4, '0')}`, operation, params, response, latency_ms: ms == null ? undefined : +ms.toFixed(2), simulated: true });
+  mcp.logs.length = Math.min(mcp.logs.length, 25);
+  renderLog();
+}
+function renderLog() {
+  $('#reqCount').textContent = mcp.n;
+  $('#avgLat').textContent = (mcp.n ? mcp.total / mcp.n : 0).toFixed(1);
+  $('#mcpLog').textContent = mcp.logs.length ? JSON.stringify(mcp.logs, null, 2) : '{ "status": "ready" }';
+}
+ 
+/* ---------- state mutation with undo ---------- */
+const history = [];
+function commit(label, mut, { silent = false } = {}) {
+  const t0 = performance.now();
+  history.push({ label, s: JSON.stringify(S.dev) }); if (history.length > 40) history.shift();
+  S.dev.party = false;
+  mut(S.dev);
+  S.dev.brightness = clampN(Math.round(S.dev.brightness), 0, 100);
+  S.dev.target = clampN(Math.round(S.dev.target), 60, 85);
+  S.dev.volume = clampN(Math.round(S.dev.volume), 0, 100);
+  render(); save();
+  logEvent('device.update', { change: label }, { status: 'success' }, performance.now() - t0);
+  announce(label);
+  if (!silent) toast(label, { undo: true });
+}
+function undo() {
+  const h = history.pop();
+  if (!h) { toast('Nothing to undo'); return false; }
+  const amb = S.dev.ambient; S.dev = JSON.parse(h.s); S.dev.ambient = amb;
+  render(); save(); toast(`Undid: ${h.label}`); announce(`Undid ${h.label}`);
+  logEvent('device.undo', { change: h.label }, { status: 'success' }, 0);
+  return true;
+}
+ 
+/* ---------- climate + energy model ---------- */
+function hvac(d) {
+  const diff = d.ambient - d.target, db = d.mode === 'eco' ? 3 : 0.5;
+  if (d.mode !== 'heat' && diff > db) return 'cooling';
+  if (d.mode !== 'cool' && diff < -db) return 'heating';
+  return 'idle';
+}
+function watts(d) {
+  let w = 45, lights = 0, hv = 0;
+  Object.values(d.rooms).forEach(r => { if (r.on) lights += 12 * d.brightness / 100; });
+  const h = hvac(d); if (h !== 'idle') hv = (h === 'cooling' ? 1400 : 1600) * (d.mode === 'eco' ? 0.7 : 1);
+  const media = d.nowPlaying ? 20 : 0;
+  return { total: Math.round(w + lights + hv + media), lights: Math.round(lights), hv: Math.round(hv), media };
+}
+const energyHist = [];
+function tick() {
+  const d = S.dev, h = hvac(d);
+  if (h === 'cooling') d.ambient = Math.max(d.target - 0.5, d.ambient - 0.4);
+  else if (h === 'heating') d.ambient = Math.min(d.target + 0.5, d.ambient + 0.4);
+  else d.ambient += (80 - d.ambient) * 0.01;
+  d.ambient = Math.round(d.ambient * 10) / 10;
+  energyHist.push(watts(d).total); if (energyHist.length > 40) energyHist.shift();
+  renderClimate(); renderEnergy(); save();
+}
+ 
+/* ---------- party cycling ---------- */
+let partyTimer = null, partyOffset = 0;
+function syncParty() {
+  const want = S.dev.party && !S.prefs.reduceMotion;
+  if (want && !partyTimer) partyTimer = setInterval(() => { partyOffset++; eachRoom(S.dev, (r, k, i) => { r.color = PARTY[(i + partyOffset) % PARTY.length]; }); renderLights(); }, 1500);
+  if (!want && partyTimer) { clearInterval(partyTimer); partyTimer = null; }
+}
+ 
+/* =====================  COMMAND ENGINE  ===================== */
+const RX = {
+  query: /^(is|are|what|what's|whats|how|status|check|tell me|am i|which)\b/,
+  neg: /\b(don'?t|do not|never)\b/,
+  on: /\b(on|enable|activate)\b/, off: /\b(off|disable|deactivate)\b/,
+  yes: /^(yes|yep|yeah|sure|ok|okay|confirm|do it|go ahead)\b/, no: /^(no|nope|cancel|never ?mind|stop)\b/
+};
+const INTENTS = [
+  { name: 'scene', test: t => Object.values(SCENES).some(s => s.match.test(t)) },
+  { name: 'alarm', test: t => /\b(alarm|security|arm|disarm)\b/.test(t) },
+  { name: 'climate', test: t => /\b(thermostat|temperature|temp|degrees?|warmer|cooler|hotter|colder|heat|heating|cooling|ac|hvac|eco)\b|\b(cool|auto) mode\b/.test(t) },
+  { name: 'lights', test: t => /\b(lights?|lamps?|bulbs?|brightness|dim|brighten|brighter)\b/.test(t) },
+  { name: 'lock', test: t => /\b(lock|unlock|locked|door|doors)\b/.test(t) },
+  { name: 'media', test: t => /\b(music|playlist|song|songs|play|pause|volume|resume)\b/.test(t) },
+  { name: 'routine', test: t => /\b(routine|checklist|tasks?)\b/.test(t) }
+];
+const normalize = s => String(s || '').toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim();
+function splitClauses(t) {
+  const out = [];
+  t.split(/\s*(?:,|;|\bthen\b)\s*/).filter(Boolean).forEach(part => {
+    const frags = part.split(/\s+and\s+/).filter(Boolean);
+    let buf = '';
+    frags.forEach((f, i) => {
+      buf = buf ? buf + ' and ' + f : f;
+      const hasIntent = INTENTS.some(x => x.test(buf));
+      if (hasIntent || i === frags.length - 1) { out.push(buf); buf = ''; }
+    });
+  });
+  // merge a trailing intent-less fragment into the previous clause
+  for (let i = out.length - 1; i > 0; i--) if (!INTENTS.some(x => x.test(out[i]))) { out[i - 1] += ' and ' + out[i]; out.splice(i, 1); }
+  return out;
+}
+const status = d => {
+  const on = Object.keys(d.rooms).filter(k => d.rooms[k].on).map(k => ROOM_NAMES[k]);
+  return `Lights: ${on.length ? on.join(', ') + ` at ${d.brightness}%` : 'all off'}. Climate: ${fmt(d.target)} target, ${fmt(d.ambient)} inside (${d.mode}, ${hvac(d)}). Door: ${d.locked ? 'locked' : 'unlocked'}. Alarm: ${d.armed ? 'armed' : 'disarmed'}.${d.nowPlaying ? ` Playing: ${d.nowPlaying}.` : ''}`;
+};
+ 
+const HANDLERS = {
+  scene(t) {
+    const [key, sc] = Object.entries(SCENES).find(([, s]) => s.match.test(t));
+    return { reply: `${sc.name} scene on.`, mut: d => sc.apply(d), label: `${sc.name} scene` };
+  },
+  lights(t, q, d) {
+    const rooms = Object.keys(ROOM_ALIAS).filter(k => ROOM_ALIAS[k].test(t));
+    const targets = rooms.length ? rooms : Object.keys(d.rooms);
+    if (q) { const on = targets.filter(k => d.rooms[k].on).map(k => ROOM_NAMES[k]); return { reply: on.length ? `On: ${on.join(', ')} at ${d.brightness}%.` : 'Those lights are off.' }; }
+    const pct = t.match(/(\d{1,3})\s*(?:%|percent)/);
+    const color = Object.keys(COLORS).find(c => new RegExp(`\\b${c}\\b`).test(t));
+    let on;
+    if (RX.off.test(t) || (pct && +pct[1] === 0)) on = false;
+    else if (RX.on.test(t) || pct || color || /\b(dim|brighten|brighter)\b/.test(t)) on = true;
+    else on = !targets.some(k => d.rooms[k].on);
+    let b = d.brightness;
+    if (pct) b = clampN(+pct[1], 0, 100);
+    else if (/\bdim\b/.test(t) && on) b = Math.max(10, b - 25);
+    else if (/\b(brighten|brighter)\b/.test(t)) b = Math.min(100, b + 25);
+    const where = rooms.length ? rooms.map(k => ROOM_NAMES[k]).join(' & ') : 'All';
+    const text = `${where} lights ${on ? `on at ${b}%` : 'off'}${color && on ? `, ${color}` : ''}.`;
+    return { reply: text, label: text.replace(/\.$/, ''), mut: dd => { targets.forEach(k => { dd.rooms[k].on = on; if (color) dd.rooms[k].color = COLORS[color]; }); if (on) dd.brightness = b; } };
+  },
+  climate(t, q, d) {
+    const modeM = t.match(/\b(cool|heat|auto|eco)(?:ing)?\s+mode\b|\bmode\s+(?:to\s+)?(cool|heat|auto|eco)\b|\bset (?:it )?to (eco|auto)\b/);
+    if (modeM) { const m = modeM[1] || modeM[2] || modeM[3]; return { reply: `Climate mode: ${m}.`, label: `Climate mode ${m}`, mut: dd => { dd.mode = m; } }; }
+    if (q && !/\bset\b/.test(t)) return { reply: `Target ${fmt(d.target)}, currently ${fmt(d.ambient)} inside (${d.mode} mode, ${hvac(d)}).` };
+    const num = t.match(/(-?\d{1,3}(?:\.\d)?)\s*(?:°|degrees?)?\s*(c\b|celsius|f\b|fahrenheit)?/);
+    const toN = t.match(/\bto\s*(-?\d{1,3}(?:\.\d)?)\s*(?:°|degrees?)?\s*(c\b|celsius|f\b|fahrenheit)?/);
+    const up = /\b(warmer|hotter|raise|increase|up)\b/.test(t), down = /\b(cooler|colder|lower|decrease|down)\b/.test(t);
+    let f;
+    if (toN || (num && !up && !down)) {
+      const m = toN || num; const unit = m[2] ? (m[2][0] === 'c' ? 'C' : 'F') : S.prefs.unit;
+      f = toF(+m[1], unit);
+    } else if (up || down) {
+      const step = num ? +num[1] : 2; const stepF = S.prefs.unit === 'C' ? step * 1.8 : step;
+      f = Math.round(d.target + (up && !down ? stepF : -stepF));
+    } else return { reply: `Say a temperature like "set the temperature to ${disp(70)}", or "warmer" / "cooler".`, hint: true };
+    if (f < 60 || f > 85) return { reply: `I can set ${fmt(60)} to ${fmt(85)}. ${fmt(f)} is outside that range, so I left it at ${fmt(d.target)}.` };
+    return { reply: `Thermostat set to ${fmt(f)}.`, label: `Thermostat ${fmt(f)}`, mut: dd => { dd.target = f; } };
+  },
+  alarm(t, q, d) {
+    if (q) return { reply: `Alarm is ${d.armed ? 'armed' : 'disarmed'}.` };
+    const dis = /\bdisarm\b/.test(t) || RX.off.test(t);
+    const arm = !dis && (/\barm\b/.test(t) || RX.on.test(t) || /\bset\b/.test(t));
+    if (dis) return { confirm: { reply: 'Alarm disarmed.', label: 'Alarm disarmed', mut: dd => { dd.armed = false; } }, reply: 'Disarming the alarm is a sensitive action. Confirm?' };
+    if (arm) return { reply: 'Alarm armed (Away).', label: 'Alarm armed', mut: dd => { dd.armed = true; } };
+    return { reply: `Alarm is ${d.armed ? 'armed' : 'disarmed'}. Say "arm" or "disarm".` };
+  },
+  lock(t, q, d) {
+    if (q) return { reply: `Front door is ${d.locked ? 'locked' : 'unlocked'}.` };
+    if (/\b(unlock|open)\b/.test(t)) return { confirm: { reply: 'Front door unlocked.', label: 'Front door unlocked', mut: dd => { dd.locked = false; } }, reply: 'Unlocking the door is a sensitive action. Confirm?' };
+    return { reply: 'Front door locked.', label: 'Front door locked', mut: dd => { dd.locked = true; } };
+  },
+  media(t, q, d) {
+    if (q) return { reply: d.nowPlaying ? `Playing "${d.nowPlaying}" at volume ${d.volume}.` : 'Nothing is playing.' };
+    if (/\bvolume\b/.test(t)) {
+      const n = t.match(/(\d{1,3})/); const v = n ? clampN(+n[1], 0, 100) : clampN(d.volume + (/\b(down|lower|quieter)\b/.test(t) ? -10 : 10), 0, 100);
+      return { reply: `Volume ${v}.`, label: `Volume ${v}`, mut: dd => { dd.volume = v; } };
+    }
+    if (/\b(pause|stop|mute)\b/.test(t)) return { reply: 'Music paused.', label: 'Music paused', mut: dd => { dd.nowPlaying = null; } };
+    const m = t.match(/\bplay\s+(?:some\s+|the\s+|my\s+)?(.+?)(?:\s+(?:on|in)\s+(?:the\s+)?[\w\s]+)?$/);
+    const q2 = m && !/^(music|something|a song|songs)$/.test(m[1]) ? m[1].replace(/\b\w/g, c => c.toUpperCase()) : 'Relaxing Lofi Beats';
+    return { reply: `Playing "${q2}".`, label: `Playing ${q2}`, mut: dd => { dd.nowPlaying = q2; } };
+  },
+  routine(t) {
+    const hit = ROUTINE_ALIAS.find(([rx]) => rx.test(t));
+    if (!hit || !S.routines[hit[1]]) return { reply: `Which routine? ${Object.keys(S.routines).join(', ')}.` };
+    const name = hit[1], list = S.routines[name];
+    return { reply: `${name}: ${list.filter(x => x.done).length} of ${list.length} tasks done.`, fx: () => { S.activeRoutine = name; renderRoutines(); save(); } };
+  }
+};
+ 
+let pending = null;
+function interpret(raw) {
+  const text = normalize(raw);
+  if (!text) return { reply: 'Type or say a command.', ok: false };
+ 
+  if (pending) {
+    if (RX.yes.test(text)) { const p = pending; pending = null; commit(p.label, p.mut); return { reply: p.reply, ok: true, actions: [p.label] }; }
+    if (RX.no.test(text)) { pending = null; return { reply: 'Okay, cancelled.', ok: true }; }
+    pending = null;
+  }
+  if (/^(undo|revert|take that back)\b/.test(text)) return { reply: undo() ? 'Undone.' : 'Nothing to undo.', ok: true };
+  if (/^(help|what can you do)\b/.test(text)) return { reply: 'I can control lights (rooms, %, colors), temperature and mode, locks, alarm, music and scenes. I understand several commands at once, e.g. "lock the door and dim the bedroom to 20%". Unlocking and disarming need your confirmation. Say "undo" to reverse the last change.', ok: true };
+  if (/\b(status|summary|overview|what'?s on)\b/.test(text)) return { reply: status(S.dev), ok: true };
+  const add = String(raw).trim().match(/^add\s+(.+?)\s+to\s+(?:my\s+|the\s+)?(.+?)(?:\s+(?:list|routine|checklist))?$/i);
+  if (add) {
+    const hit = ROUTINE_ALIAS.find(([rx]) => rx.test(add[2].toLowerCase()));
+    if (hit && S.routines[hit[1]]) {
+      const task = add[1].charAt(0).toUpperCase() + add[1].slice(1);
+      S.routines[hit[1]].push({ t: task.slice(0, 120), done: false }); S.activeRoutine = hit[1]; save(); renderRoutines();
+      return { reply: `Added "${task}" to ${hit[1]}.`, ok: true, actions: ['routine.add'] };
+    }
+  }
+ 
+  const muts = [], replies = [], labels = [], fxs = []; let confirm = null;
+  splitClauses(text).forEach(clause => {
+    const intent = INTENTS.find(x => x.test(clause));
+    if (!intent) return;
+    if (RX.neg.test(clause)) { replies.push(`Okay, I won't change the ${intent.name === 'climate' ? 'thermostat' : intent.name}.`); return; }
+    const q = RX.query.test(clause) || (/\?\s*$/.test(clause) && !/\b(turn|set|switch|make|lock|unlock|arm|disarm|play|dim|start|open|close)\b/.test(clause));
+    const r = HANDLERS[intent.name](clause, q, S.dev);
+    if (r.reply) replies.push(r.reply);
+    if (r.mut) { muts.push(r.mut); labels.push(r.label); }
+    if (r.fx) fxs.push(r.fx);
+    if (r.confirm) confirm = r.confirm;
+  });
+ 
+  if (!replies.length) return { reply: `Sorry, I didn't understand "${raw.trim().slice(0, 60)}", so I did nothing. Try "dim the bedroom lights to 30%", "set the temperature to ${disp(70)}", "lock the door", or "good night".`, ok: false };
+  if (muts.length) commit(labels.length > 1 ? `${labels.length} changes` : labels[0], d => muts.forEach(m => m(d)));
+  fxs.forEach(f => f());
+  if (confirm) pending = confirm;
+  return { reply: replies.join(' '), ok: true, actions: labels, confirm: !!confirm };
+}
+ 
+function handleInput(text, source = 'text') {
+  const clean = text.trim(); if (!clean) return;
+  addMsg('user', clean);
+  const t0 = performance.now();
+  const res = interpret(clean);
+  addMsg('assistant', res.reply, { confirm: res.confirm });
+  logEvent('assistant.command', { prompt: clean.slice(0, 120), source }, { status: res.ok ? 'success' : 'unrecognized', actions: res.actions || [] }, performance.now() - t0);
+}
+ 
+/* =====================  RENDERING  ===================== */
+function addMsg(role, text, { confirm = false } = {}) {
+  const box = $('#chatBox');
+  const m = el('div', { class: `msg ${role}` }, text);
+  if (confirm) {
+    m.append(el('div', { class: 'row', style: 'margin-top:.5rem' },
+      el('button', { class: 'btn sm primary', type: 'button', text: 'Confirm', onclick: () => handleInput('confirm') }),
+      el('button', { class: 'btn sm', type: 'button', text: 'Cancel', onclick: () => handleInput('cancel') })));
+  }
+  box.append(m); box.scrollTop = box.scrollHeight;
+  if (role === 'assistant') speak(text);
+}
+ 
+function buildStatic() {
+  // scenes
+  const sc = $('#scenes');
+  Object.entries(SCENES).forEach(([k, s]) => sc.append(el('button', { class: 'scene', type: 'button', onclick: () => commit(`${s.name} scene`, d => s.apply(d)) },
+    el('span', { 'aria-hidden': 'true', style: 'font-size:1.2rem', text: s.icon }), el('b', { text: s.name }), el('span', { class: 'd', text: s.desc }))));
+  $('#autoScene').append(...Object.entries(SCENES).map(([k, s]) => el('option', { value: k, text: `${s.icon} ${s.name}` })));
+  // rooms
+  const rooms = $('#rooms');
+  Object.keys(ROOM_NAMES).forEach(k => {
+    rooms.append(el('div', { class: 'room' },
+      el('div', { class: 'row between' }, el('span', { id: `rl-${k}`, class: 'small', style: 'font-weight:650', text: ROOM_NAMES[k] }),
+        el('button', { class: 'switch', type: 'button', role: 'switch', id: `sw-${k}`, 'aria-labelledby': `rl-${k}`, onclick: () => { const on = !S.dev.rooms[k].on; commit(`${ROOM_NAMES[k]} lights ${on ? 'on' : 'off'}`, d => { d.rooms[k].on = on; }, { silent: true }); } })),
+      el('div', { class: 'row between tiny muted' }, el('label', { for: `col-${k}`, text: 'Color' }),
+        el('input', { type: 'color', id: `col-${k}`, 'aria-label': `${ROOM_NAMES[k]} light color`, onchange: e => commit(`${ROOM_NAMES[k]} color`, d => { d.rooms[k].color = e.target.value; }, { silent: true }) }))));
+  });
+  // modes
+  $('#modes').append(...Object.entries(MODES).map(([k, n]) => el('button', { class: 'btn sm', type: 'button', 'data-mode': k, text: n, onclick: () => commit(`Climate mode ${n}`, d => { d.mode = k; }, { silent: true }) })));
+  // chips
+  ['Good night', 'Dim the lights to 30%', 'Set the temperature to 70', 'Is the door locked?', 'Status'].forEach(c => $('#chips').append(el('button', { class: 'chip', type: 'button', text: c, onclick: () => handleInput(c, 'chip') })));
+  // settings radios
+  const radios = (host, name, opts, cur, onChange) => host.replaceChildren(...opts.map(([v, label]) => el('label', {}, el('input', { type: 'radio', name, value: v, checked: String(cur()) === String(v), onchange: () => onChange(v) }), el('span', { text: label }))));
+  radios($('#themeRadios'), 'theme', [['auto', 'Auto'], ['dark', 'Dark'], ['light', 'Light']], () => S.prefs.theme, v => setPref('theme', v));
+  radios($('#fontRadios'), 'font', [[14, 'Small'], [16, 'Medium'], [18, 'Large'], [21, 'Extra large']], () => S.prefs.font, v => setPref('font', +v));
+  radios($('#unitRadios'), 'unit', [['F', '°F'], ['C', '°C']], () => S.prefs.unit, v => setPref('unit', v));
+  const a11y = $('#a11yOpts');
+  [['contrast', 'High contrast'], ['reduceMotion', 'Reduce motion'], ['dyslexia', 'Dyslexia-friendly font'], ['bigTargets', 'Large touch targets'], ['tts', 'Spoken replies and alerts']].forEach(([k, label]) => {
+    a11y.append(el('div', { class: 'opt' }, el('span', { id: `lbl-${k}`, text: label }), el('button', { class: 'switch', type: 'button', role: 'switch', id: `pref-${k}`, 'aria-labelledby': `lbl-${k}`, onclick: () => setPref(k, !S.prefs[k]) })));
+  });
+}
+ 
+function renderLights() {
+  const d = S.dev;
+  Object.keys(ROOM_NAMES).forEach(k => {
+    const sw = $(`#sw-${k}`); sw.setAttribute('aria-checked', String(d.rooms[k].on));
+    const c = $(`#col-${k}`); if (c.value !== d.rooms[k].color) c.value = d.rooms[k].color;
+  });
+  const any = Object.values(d.rooms).some(r => r.on);
+  $('#masterBtn').textContent = any ? 'All off' : 'All on';
+  $('#brightness').value = d.brightness; $('#brightVal').textContent = `${d.brightness}%`;
+  $('#brightness').setAttribute('aria-valuetext', `${d.brightness} percent`);
+}
+function renderClimate() {
+  const d = S.dev, h = hvac(d);
+  $('#tempVal').textContent = fmt(d.target);
+  $('#ambientVal').textContent = `Target · ${fmt(d.ambient)} inside now`;
+  const chip = $('#hvacChip'); chip.textContent = h === 'cooling' ? '❄ Cooling' : h === 'heating' ? '🔥 Heating' : '✓ Holding'; chip.className = `pill ${h === 'idle' ? 'ok' : 'cool'}`;
+  $$('#modes .btn').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === d.mode)));
+}
+function renderSecurity() {
+  const d = S.dev;
+  $('#lockLabel').textContent = d.locked ? 'Locked' : 'Unlocked'; $('#lockIcon').textContent = d.locked ? '🔒' : '🔓';
+  $('#lockBtn').setAttribute('aria-pressed', String(d.locked));
+  $('#alarmLabel').textContent = d.armed ? 'Armed (Away)' : 'Disarmed'; $('#alarmIcon').textContent = d.armed ? '🔔' : '🔕';
+  $('#alarmBtn').setAttribute('aria-pressed', String(d.armed));
+  const chip = $('#alarmChip'); chip.textContent = d.armed ? 'Armed' : 'Disarmed'; chip.className = `pill ${d.armed ? 'bad' : 'ok'}`;
+}
+function renderMedia() {
+  const d = S.dev;
+  $('#nowPlaying').textContent = d.nowPlaying ? `♪ ${d.nowPlaying}` : 'Nothing playing';
+  const b = $('#mediaBtn'); b.textContent = d.nowPlaying ? '⏸ Pause' : '▶ Play'; b.setAttribute('aria-pressed', String(!!d.nowPlaying));
+  $('#volSlider').value = d.volume; $('#volVal').textContent = d.volume;
+}
+function renderEnergy() {
+  const d = S.dev, w = watts(d), kwh = w.total * 24 / 1000, cost = kwh * S.prefs.rate;
+  $('#wattsNow').textContent = w.total >= 1000 ? `${(w.total / 1000).toFixed(2)} kW` : `${w.total} W`;
+  $('#costDay').textContent = `${kwh.toFixed(1)} kWh · ${S.prefs.cur}${cost.toFixed(2)}`;
+  const parts = [['air conditioning/heating', w.hv], ['lights', w.lights], ['media', w.media]].sort((a, b) => b[1] - a[1]);
+  $('#energyTip').textContent = parts[0][1] === 0 ? 'Everything is idling. Nice and efficient.' :
+    parts[0][0].startsWith('air') ? `Climate is your biggest draw. Eco mode or ${fmt(d.target + (d.mode === 'heat' ? -2 : 2))} would trim it.` :
+      parts[0][0] === 'lights' ? `Lights are your biggest draw. Dimming to ${Math.max(10, d.brightness - 30)}% saves about ${Math.round(w.lights * 0.3)} W.` : 'Media is your biggest draw right now.';
+  const svg = $('#spark'); svg.replaceChildren();
+  if (energyHist.length > 1) {
+    const max = Math.max(...energyHist, 400), n = energyHist.length - 1;
+    const pts = energyHist.map((v, i) => `${(i / n) * 120},${31 - (v / max) * 29}`).join(' ');
+    const pl = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    pl.setAttribute('points', pts); pl.setAttribute('fill', 'none'); pl.setAttribute('stroke', 'var(--accent)'); pl.setAttribute('stroke-width', '1.6'); pl.setAttribute('vector-effect', 'non-scaling-stroke');
+    svg.append(pl);
+  }
+}
+function renderRoutines() {
+  const sel = $('#routineSelect');
+  sel.replaceChildren(...Object.keys(S.routines).map(n => el('option', { value: n, text: n, selected: n === S.activeRoutine })));
+  const list = S.routines[S.activeRoutine] || [], ul = $('#checklist'); ul.replaceChildren();
+  list.forEach((task, i) => {
+    const id = `task-${i}`;
+    ul.append(el('li', { class: `li${task.done ? ' done' : ''}` },
+      el('input', { type: 'checkbox', id, checked: task.done, onchange: e => { task.done = e.target.checked; save(); renderRoutines(); } }),
+      el('label', { for: id, text: task.t }),
+      el('button', { class: 'btn sm icon', type: 'button', 'aria-label': `Delete task: ${task.t}`, text: '✕', onclick: () => { list.splice(i, 1); save(); renderRoutines(); announce('Task deleted'); } })));
+  });
+  const done = list.filter(x => x.done).length, pct = list.length ? Math.round(done / list.length * 100) : 0;
+  $('#routineText').textContent = `${done} / ${list.length}`; $('#routineBar').style.width = `${pct}%`; $('#routineBarWrap').setAttribute('aria-valuenow', pct);
+  if (list.length && done === list.length && !renderRoutines.celebrated) { renderRoutines.celebrated = true; announce(`${S.activeRoutine} complete`); toast(`${S.activeRoutine} complete 🎉`); }
+  if (done < list.length) renderRoutines.celebrated = false;
+}
+function renderAutomations() {
+  const ul = $('#autoList'); ul.replaceChildren();
+  if (!S.automations.length) ul.append(el('li', { class: 'small muted', text: 'No automations yet.' }));
+  S.automations.forEach(a => {
+    const sc = SCENES[a.scene]; if (!sc) return;
+    ul.append(el('li', { class: 'li' },
+      el('span', {}, el('b', { class: 'mono', text: a.time }), ` ${sc.icon} ${sc.name}`),
+      el('span', { class: 'row' },
+        el('button', { class: 'switch', type: 'button', role: 'switch', 'aria-checked': String(a.on), 'aria-label': `Automation ${a.time} ${sc.name}`, onclick: () => { a.on = !a.on; save(); renderAutomations(); } }),
+        el('button', { class: 'btn sm icon', type: 'button', 'aria-label': `Delete automation ${a.time} ${sc.name}`, text: '✕', onclick: () => { S.automations = S.automations.filter(x => x !== a); save(); renderAutomations(); } }))));
+  });
+}
+function renderPrefsControls() {
+  const p = S.prefs;
+  ['contrast', 'reduceMotion', 'dyslexia', 'bigTargets', 'tts'].forEach(k => $(`#pref-${k}`).setAttribute('aria-checked', String(!!p[k])));
+  $('#rateInput').value = p.rate; $('#curInput').value = p.cur;
+  $$('#themeRadios input').forEach(i => { i.checked = i.value === p.theme; });
+  $$('#fontRadios input').forEach(i => { i.checked = +i.value === p.font; });
+  $$('#unitRadios input').forEach(i => { i.checked = i.value === p.unit; });
+}
+let fontLink;
+function applyPrefs() {
+  const p = S.prefs, root = document.documentElement;
+  const theme = p.theme === 'auto' ? (mq('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : p.theme;
+  root.setAttribute('data-theme', theme);
+  root.setAttribute('data-high-contrast', String(!!p.contrast));
+  root.setAttribute('data-reduce-motion', String(!!p.reduceMotion));
+  root.setAttribute('data-big-targets', String(!!p.bigTargets));
+  root.setAttribute('data-dyslexia', String(!!p.dyslexia));
+  root.style.fontSize = `${p.font}px`;
+  if (p.dyslexia && !fontLink) { fontLink = el('link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap' }); document.head.append(fontLink); }
+  renderPrefsControls(); syncParty();
+}
+function setPref(k, v) { S.prefs[k] = v; save(); applyPrefs(); render(); announce(`${k} updated`); }
+ 
+function render() { renderLights(); renderClimate(); renderSecurity(); renderMedia(); renderEnergy(); syncParty(); $('#undoBtn').disabled = history.length === 0; }
+ 
+/* =====================  EVENTS  ===================== */
+function bind() {
+  $('#masterBtn').addEventListener('click', () => { const any = Object.values(S.dev.rooms).some(r => r.on); commit(any ? 'All lights off' : 'All lights on', d => eachRoom(d, r => { r.on = !any; })); });
+  let sliderSnap = null;
+  const startSlide = () => { if (!sliderSnap) sliderSnap = JSON.stringify(S.dev); };
+  const endSlide = label => { if (sliderSnap) { history.push({ label, s: sliderSnap }); sliderSnap = null; save(); $('#undoBtn').disabled = false; announce(label); } };
+  $('#brightness').addEventListener('input', e => { startSlide(); S.dev.party = false; S.dev.brightness = +e.target.value; renderLights(); renderEnergy(); });
+  $('#brightness').addEventListener('change', () => endSlide(`Brightness ${S.dev.brightness}%`));
+  $('#volSlider').addEventListener('input', e => { startSlide(); S.dev.volume = +e.target.value; renderMedia(); });
+  $('#volSlider').addEventListener('change', () => endSlide(`Volume ${S.dev.volume}`));
+  $('#mediaBtn').addEventListener('click', () => commit(S.dev.nowPlaying ? 'Music paused' : 'Playing Relaxing Lofi Beats', d => { d.nowPlaying = d.nowPlaying ? null : 'Relaxing Lofi Beats'; }, { silent: true }));
+  $('#tempDown').addEventListener('click', () => commit('Temperature lowered', d => { d.target--; }, { silent: true }));
+  $('#tempUp').addEventListener('click', () => commit('Temperature raised', d => { d.target++; }, { silent: true }));
+  $('#lockBtn').addEventListener('click', () => commit(S.dev.locked ? 'Front door unlocked' : 'Front door locked', d => { d.locked = !d.locked; }));
+  $('#alarmBtn').addEventListener('click', () => commit(S.dev.armed ? 'Alarm disarmed' : 'Alarm armed', d => { d.armed = !d.armed; }));
+  $('#motionBtn').addEventListener('click', () => {
+    const armed = S.dev.armed;
+    logEvent('sensor.motion', { zone: 'front porch' }, { alarm_armed: armed }, 0);
+    if (armed) showAlert('Motion detected at the front porch while the alarm is armed.');
+    else { toast('Motion at the front porch (alarm disarmed, no alert)'); announce('Motion at the front porch. Alarm is disarmed.'); }
+  });
+  $('#alertClose').addEventListener('click', () => { $('#alertBar').hidden = true; });
+  $('#undoBtn').addEventListener('click', undo);
+  $('#toastUndo').addEventListener('click', () => { undo(); });
+  $('#clearChat').addEventListener('click', () => { $('#chatBox').replaceChildren(); pending = null; announce('Chat cleared'); });
+  $('#clearLog').addEventListener('click', () => { mcp.n = 0; mcp.total = 0; mcp.logs = []; renderLog(); });
+  $('#copyLog').addEventListener('click', async () => { try { await navigator.clipboard.writeText(JSON.stringify(mcp.logs, null, 2)); toast('Log copied'); } catch (_) { toast('Copy not available here'); } });
+  $('#resetRoutine').addEventListener('click', () => { (S.routines[S.activeRoutine] || []).forEach(x => { x.done = false; }); save(); renderRoutines(); announce('Routine reset'); });
+  $('#routineSelect').addEventListener('change', e => { S.activeRoutine = e.target.value; save(); renderRoutines(); });
+  $('#addTaskForm').addEventListener('submit', e => { e.preventDefault(); const i = $('#newTask'), v = i.value.trim(); if (!v) return; S.routines[S.activeRoutine].push({ t: v.slice(0, 120), done: false }); i.value = ''; save(); renderRoutines(); announce('Task added'); });
+  $('#autoForm').addEventListener('submit', e => { e.preventDefault(); const time = $('#autoTime').value, scene = $('#autoScene').value; if (!time) return; S.automations.push({ id: Date.now(), time, scene, on: true, last: '' }); S.automations.sort((a, b) => a.time.localeCompare(b.time)); save(); renderAutomations(); announce('Automation added'); });
+  $('#chatForm').addEventListener('submit', e => { e.preventDefault(); const i = $('#userInput'); const v = i.value; i.value = ''; handleInput(v, 'text'); });
+  $('#themeBtn').addEventListener('click', cycleTheme);
+  const open = d => (d.showModal ? d.showModal() : d.setAttribute('open', ''));
+  $('#settingsBtn').addEventListener('click', () => open($('#settingsDlg')));
+  $('#helpBtn').addEventListener('click', () => open($('#helpDlg')));
+  $('#rateInput').addEventListener('change', e => setPref('rate', Math.max(0, +e.target.value || 0)));
+  $('#curInput').addEventListener('change', e => setPref('cur', e.target.value.slice(0, 3)));
+  $('#exportBtn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify({ app: 'homecue', version: 3, ...S }, null, 2)], { type: 'application/json' });
+    const a = el('a', { href: URL.createObjectURL(blob), download: 'homecue-backup.json' }); document.body.append(a); a.click(); a.remove();
+  });
+  $('#importFile').addEventListener('change', async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try { const raw = JSON.parse(await f.text()); if (!raw || typeof raw !== 'object' || !raw.dev) throw new Error('bad'); S = merge(raw); save(); applyPrefs(); render(); renderRoutines(); renderAutomations(); toast('Backup imported'); }
+    catch (_) { toast('That file is not a valid HomeCue backup'); }
+    e.target.value = '';
+  });
+  $('#resetAll').addEventListener('click', () => { if (!confirm('Reset all HomeCue settings and data on this device?')) return; S = defaults(); history.length = 0; save(); applyPrefs(); render(); renderRoutines(); renderAutomations(); toast('Reset to defaults'); });
+  mq('(prefers-color-scheme: light)').addEventListener && mq('(prefers-color-scheme: light)').addEventListener('change', () => { if (S.prefs.theme === 'auto') applyPrefs(); });
+ 
+  document.addEventListener('keydown', e => {
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || '')) && e.target.type !== 'range' && e.target.type !== 'checkbox';
+    if (e.altKey && e.code === 'KeyM') { e.preventDefault(); $('#micBtn').click(); }
+    else if (e.altKey && e.code === 'KeyT') { e.preventDefault(); cycleTheme(); }
+    else if (e.altKey && e.code === 'KeyC') { e.preventDefault(); $('#clearChat').click(); }
+    else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !typing) { e.preventDefault(); undo(); }
+    else if (!typing && !e.ctrlKey && !e.metaKey && !e.altKey && e.key === '/') { e.preventDefault(); $('#userInput').focus(); }
+    else if (!typing && e.key === '?') { e.preventDefault(); open($('#helpDlg')); }
+  });
+}
+function cycleTheme() { const order = ['auto', 'dark', 'light']; setPref('theme', order[(order.indexOf(S.prefs.theme) + 1) % 3]); toast(`Theme: ${S.prefs.theme}`); }
+ 
+/* ---------- voice input ---------- */
+function setupVoice() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition, mic = $('#micBtn');
+  if (!SR) { mic.disabled = true; mic.title = 'Voice input is not supported in this browser'; mic.setAttribute('aria-label', 'Voice input unavailable in this browser'); return; }
+  const rec = new SR(); rec.continuous = false; rec.interimResults = false; rec.lang = navigator.language || 'en-US';
+  let on = false;
+  rec.onstart = () => { on = true; $('#voiceStatus').hidden = false; mic.classList.add('rec'); announce('Listening'); };
+  rec.onend = () => { on = false; $('#voiceStatus').hidden = true; mic.classList.remove('rec'); };
+  rec.onresult = e => handleInput(e.results[0][0].transcript, 'voice');
+  rec.onerror = e => addMsg('system', e.error === 'not-allowed' ? 'Microphone permission was denied. You can still type commands.' : e.error === 'no-speech' ? "I didn't hear anything. Tap the mic and try again." : `Voice input problem (${e.error}). You can still type commands.`);
+  mic.addEventListener('click', () => { try { on ? rec.stop() : rec.start(); } catch (_) {} });
+}
+ 
+/* ---------- automations scheduler ---------- */
+function runAutomations(now = new Date()) {
+  const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`, day = now.toDateString();
+  S.automations.forEach(a => {
+    if (!a.on || a.time !== hhmm || a.last === `${day} ${hhmm}` || !SCENES[a.scene]) return;
+    a.last = `${day} ${hhmm}`;
+    commit(`Automation: ${SCENES[a.scene].name}`, d => SCENES[a.scene].apply(d));
+    showAlert(`Automation ran: ${SCENES[a.scene].name} (${a.time}).`);
+  });
+}
+ 
+/* ---------- init ---------- */
+function init() {
+  buildStatic(); bind(); setupVoice();
+  applyPrefs(); render(); renderRoutines(); renderAutomations(); renderLog();
+  energyHist.push(watts(S.dev).total, watts(S.dev).total); renderEnergy();
+  addMsg('system', 'Hi! Try "good night", "dim the kitchen to 30% and lock the door", or "is the door locked?". Nothing leaves your device.');
+  setInterval(tick, 3000);
+  setInterval(() => runAutomations(), 15000);
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+</script>
 </body>
 </html>

@@ -1,121 +1,60 @@
-# 🏠 HomeCue – AI Home Assistant Simulation
 
-> **Alexa+ Hackathon Prototype** · Conversational interface for everyday household task planning.
+# 🏠 HomeCue
 
-HomeCue lets users type natural-language requests and instantly receive organized checklists, daily routines, and household task plans through a clean, interactive chat UI — no backend required.
+**A conversational home-planning assistant prototype**
 
----
+HomeCue brings everyday home planning into one simple interface. Users can explore routines, organize household tasks, view checklists, and interact with simulated smart-home controls.
+
+Built with HTML, CSS, and JavaScript for the Amazon Developer Hackathon.
 
 ## ✨ Features
 
-| Feature | Details |
-|---|---|
-| 💬 Chat Interface | Clean, animated conversation bubbles |
-| ✅ Interactive Checklists | Tick off tasks as you complete them |
-| ⚡ Quick Prompts | One-click sidebar shortcuts for common requests |
-| 📱 Responsive | Works on desktop, tablet, and mobile |
-| 🎨 Dark Sidebar + Light Chat | Ergonomic two-tone layout |
-| 🔌 Zero Dependencies | Pure HTML / CSS / JS — no build step needed |
+- **Conversational interface:** Enter household requests and receive context-based responses.
+- **Routine planning:** Explore morning, evening, cleaning, grocery, and maintenance routines.
+- **Interactive checklists:** Mark tasks complete and track progress.
+- **Smart-home dashboard:** Simulate light controls, thermostat adjustments, and security states.
+- **Voice input:** Uses the browser's Web Speech API when supported.
+- **Theme switcher:** Toggle between dark and light themes.
+- **MCP-style execution log:** Inspect example JSON request and response payloads for simulated actions.
 
----
+## 🛠️ Tech Stack
 
-## 🚀 Getting Started
+- HTML5
+- CSS3
+- Vanilla JavaScript
+- Web Speech API (browser-dependent)
 
-### Option A – Open directly in your browser
+## 🚀 Run Locally
 
-```
-index.html  →  Right-click → Open with → Browser
-```
+1. Clone or download this repository.
+2. Open the project folder.
+3. Open `index.html` in a modern browser.
+4. For a better development experience, use a local server or VS Code Live Server.
 
-### Option B – Serve locally (recommended for development)
+No build step is required.
 
-**Using Python (comes with most systems):**
+## 🧪 Demo and Limitations
 
-```bash
-# Python 3
-python -m http.server 8080
+HomeCue is a front-end prototype. Smart-home controls and MCP-style logs are simulated. Alexa+, Ring, and physical smart-home devices are not connected unless a real integration is separately implemented and configured.
 
-# Then open: http://localhost:8080
-```
+Voice input depends on browser support and microphone permissions.
 
-**Using Node.js:**
+## 🗺️ Future Improvements
 
-```bash
-npx serve .
-```
+- Connect to authorized smart-home APIs.
+- Implement a real backend for user preferences and saved routines.
+- Add secure authentication and device authorization.
+- Integrate a real MCP client and tools.
+- Improve accessibility and automated testing.
 
----
+## 📸 Demo
 
-## 📁 Project Structure
+Add screenshots and a link to your project demo here.
 
-```
-mydevProject/
-├── index.html      # App shell, chat layout, sidebar
-├── style.css       # All styles – CSS custom properties, responsive
-├── app.js          # ResponseEngine + ChatUI logic (vanilla JS)
-├── README.md       # This file
-└── LICENSE         # MIT License
-```
+## 🏆 Hackathon
 
----
-
-## 💡 How It Works
-
-```
-User types a message
-        ↓
-app.js  →  ResponseEngine.getResponse(text)
-        ↓
-Keyword matching against built-in plan rules
-        ↓
-Returns { intro, sections: [{ title, tasks[] }] }
-        ↓
-ChatUI renders interactive checkboxes in a bot bubble
-```
-
-### Supported Request Types
-
-| You say… | HomeCue returns… |
-|---|---|
-| "morning routine" | ☀️ Weekday Morning Routine plan |
-| "cleaning checklist" | 🧹 Room-by-room cleaning list |
-| "grocery shopping" | 🛒 Weekly grocery list |
-| "home maintenance" / "october" | 🔧 Seasonal maintenance tasks |
-| "evening" / "wind down" | 🌙 Evening relaxation schedule |
-
----
-
-## 🔌 Connecting a Real LLM
-
-The `ResponseEngine.getResponse()` function in `app.js` is designed as a **drop-in replacement point**. To connect a real AI backend:
-
-```js
-// In app.js – replace the ResponseEngine.getResponse() call in sendMessage():
-
-const response = await fetch('https://your-llm-api.example.com/chat', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ message: text })
-});
-const plan = await response.json(); // must match { intro, sections } shape
-```
-
----
-
-## 🛠 Development Notes
-
-- **CSS custom properties** in `:root` make theming trivial — update colours in one place.
-- **No frameworks** were used intentionally to keep the demo self-contained for the hackathon.
-- The `.venv` directory is present for any Python-based tooling (e.g. a local API server) added later.
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you'd like to change.
-
----
+Created as a prototype for the Amazon Developer Hackathon. This is an independent project and is not an official Amazon product.
 
 ## 📄 License
 
-[MIT](./LICENSE) © 2026 HomeCue Contributors
+Released under the MIT License. See [LICENSE](LICENSE).
