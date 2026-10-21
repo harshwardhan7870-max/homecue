@@ -1,4 +1,4 @@
-CTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -111,7 +111,7 @@ svg#spark{width:100%;height:2.4rem;display:block}
 <body>
 <a class="skip" href="#main">Skip to controls</a>
 <div id="srAnnouncer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
- 
+
 <div class="wrap">
 <header class="card row between wrapflex" style="margin-bottom:1rem">
   <div class="row">
@@ -130,18 +130,18 @@ svg#spark{width:100%;height:2.4rem;display:block}
     <button class="btn sm" id="settingsBtn">⚙️ Settings</button>
   </div>
 </header>
- 
+
 <div id="alertBar" role="alert" hidden><span id="alertText"></span><button class="btn sm" id="alertClose">Dismiss</button></div>
- 
+
 <main id="main" class="grid main" tabindex="-1">
- 
+
 <!-- LEFT -->
 <section class="stack" aria-label="Scenes, assistant and media">
   <div class="card">
     <h2><span aria-hidden="true">✨</span> Scenes</h2>
     <div id="scenes" class="grid scenes" style="margin-top:.8rem"></div>
   </div>
- 
+
   <div class="card" style="display:flex;flex-direction:column;height:34rem">
     <div class="row between" style="padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:.6rem">
       <h2><span aria-hidden="true">💬</span> Smart Command <span class="pill" title="A rule-based parser that runs on your device. No AI service is called.">on-device</span></h2>
@@ -157,7 +157,7 @@ svg#spark{width:100%;height:2.4rem;display:block}
       <button type="submit" class="btn primary icon" aria-label="Send">➤</button>
     </form>
   </div>
- 
+
   <div class="card">
     <div class="row between"><h2><span aria-hidden="true">🎵</span> Media</h2><span id="nowPlaying" class="small muted">Nothing playing</span></div>
     <div class="row" style="margin-top:.7rem">
@@ -167,7 +167,7 @@ svg#spark{width:100%;height:2.4rem;display:block}
     </div>
   </div>
 </section>
- 
+
 <!-- CENTER -->
 <section class="stack" aria-label="Device controls">
   <div class="card stack" style="gap:.9rem">
@@ -181,7 +181,7 @@ svg#spark{width:100%;height:2.4rem;display:block}
     </div>
     <div id="rooms" class="grid rooms"></div>
   </div>
- 
+
   <div class="card stack" style="gap:.9rem">
     <div class="row between"><h2><span aria-hidden="true">🌡️</span> Climate</h2><span id="hvacChip" class="pill cool">Idle</span></div>
     <div class="row between" style="justify-content:space-around;padding:.3rem 0">
@@ -194,7 +194,7 @@ svg#spark{width:100%;height:2.4rem;display:block}
     </div>
     <div class="modes" role="group" aria-label="Climate mode" id="modes"></div>
   </div>
- 
+
   <div class="card stack" style="gap:.9rem">
     <div class="row between"><h2><span aria-hidden="true">🛡️</span> Security</h2><span id="alarmChip" class="pill ok">Disarmed</span></div>
     <div class="grid" style="grid-template-columns:1fr 1fr;gap:.6rem">
@@ -207,7 +207,7 @@ svg#spark{width:100%;height:2.4rem;display:block}
     </div>
   </div>
 </section>
- 
+
 <!-- RIGHT -->
 <section class="stack" aria-label="Insights, routines and automations">
   <div class="card stack" style="gap:.7rem">
@@ -216,7 +216,7 @@ svg#spark{width:100%;height:2.4rem;display:block}
     <svg id="spark" viewBox="0 0 120 32" preserveAspectRatio="none" role="img" aria-label="Recent power draw trend"></svg>
     <div id="energyTip" class="small muted"></div>
   </div>
- 
+
   <div class="card stack" style="gap:.7rem">
     <div class="row between"><h2><span aria-hidden="true">✅</span> Routines</h2><button class="btn sm" id="resetRoutine" aria-label="Uncheck all tasks">Reset</button></div>
     <label for="routineSelect" class="sr-only">Routine</label>
@@ -225,14 +225,14 @@ svg#spark{width:100%;height:2.4rem;display:block}
     <ul id="checklist" class="list" style="max-height:14rem;overflow:auto"></ul>
     <form id="addTaskForm" class="row"><label for="newTask" class="sr-only">New task</label><input type="text" id="newTask" placeholder="Add a task…" autocomplete="off"><button class="btn primary icon" aria-label="Add task">+</button></form>
   </div>
- 
+
   <div class="card stack" style="gap:.7rem">
     <h2><span aria-hidden="true">⏰</span> Automations</h2>
     <ul id="autoList" class="list"></ul>
     <form id="autoForm" class="row wrapflex"><label for="autoTime" class="sr-only">Time</label><input type="time" id="autoTime" value="07:00" style="flex:1;min-width:6.5rem"><label for="autoScene" class="sr-only">Scene</label><select id="autoScene" style="flex:2;min-width:8rem"></select><button class="btn primary icon" aria-label="Add automation">+</button></form>
     <div class="tiny muted">Runs while HomeCue is open.</div>
   </div>
- 
+
   <div class="card stack" style="gap:.6rem">
     <div class="row between"><h2><span aria-hidden="true">🧾</span> Activity log</h2><div class="row"><button class="btn sm" id="copyLog">Copy</button><button class="btn sm" id="clearLog">Clear</button></div></div>
     <div class="row between tiny muted mono"><span>Events: <b id="reqCount">0</b></span><span>Avg latency: <b id="avgLat">0.0</b> ms</span></div>
@@ -240,12 +240,12 @@ svg#spark{width:100%;height:2.4rem;display:block}
   </div>
 </section>
 </main>
- 
+
 <footer class="small muted" style="text-align:center;padding:1.2rem 0">HomeCue 3.0 · Data stays on this device · Press <kbd>?</kbd> for shortcuts</footer>
 </div>
- 
+
 <div id="toast" role="status" hidden><span id="toastMsg"></span><button class="btn sm" id="toastUndo" hidden>Undo</button></div>
- 
+
 <dialog id="settingsDlg" aria-labelledby="settingsTitle">
   <form method="dialog">
     <div class="row between" style="margin-bottom:.8rem"><h2 id="settingsTitle" style="font-size:1.15rem">Settings</h2><button class="btn sm" value="close">Done</button></div>
@@ -263,7 +263,7 @@ svg#spark{width:100%;height:2.4rem;display:block}
     </fieldset>
   </div>
 </dialog>
- 
+
 <dialog id="helpDlg" aria-labelledby="helpTitle">
   <form method="dialog"><div class="row between" style="margin-bottom:.8rem"><h2 id="helpTitle" style="font-size:1.15rem">Keyboard shortcuts</h2><button class="btn sm">Close</button></div></form>
   <ul class="list">
@@ -276,14 +276,13 @@ svg#spark{width:100%;height:2.4rem;display:block}
   </ul>
   <p class="small muted">Sensitive voice commands (unlock, disarm) always ask you to confirm first.</p>
 </dialog>
- 
+
 <script>
 'use strict';
 /* =====================================================================
    HomeCue 3.0
    - Local-first: state lives in localStorage; no network calls.
-   - One command engine for chat, voice, and chips (multi-command, negation,
-     questions, confirmations for sensitive actions, honest failures).
+   - One command engine for chat, voice, and chips.
    - Everything is undoable. Everything is announced to screen readers.
    ===================================================================== */
 const $ = (s, r = document) => r.querySelector(s);
@@ -302,7 +301,7 @@ function el(tag, props = {}, ...kids) {
 }
 const clampN = (n, a, b) => Math.min(b, Math.max(a, n));
 const mq = q => (window.matchMedia ? window.matchMedia(q) : { matches: false, addEventListener() {} });
- 
+
 const KEY = 'homecue.v3';
 const ROOM_NAMES = { living: 'Living Room', kitchen: 'Kitchen', bedroom: 'Bedroom', office: 'Office' };
 const ROOM_ALIAS = { living: /\b(living|lounge)\b/, kitchen: /\bkitchen\b/, bedroom: /\bbed ?room\b/, office: /\b(office|study)\b/ };
@@ -310,7 +309,7 @@ const COLORS = { red: '#ef4444', orange: '#f97316', yellow: '#facc15', green: '#
 const PARTY = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#a855f7', '#ec4899'];
 const MODES = { cool: 'Cool', heat: 'Heat', auto: 'Auto', eco: 'Eco' };
 const ROUTINE_ALIAS = [[/morning|wake/, 'Morning Routine'], [/evening|wind|night/, 'Evening Wind-down'], [/clean/, 'Cleaning Checklist'], [/grocer|shopping/, 'Grocery List'], [/maint|repair/, 'Home Maintenance']];
- 
+
 const T = (arr) => arr.map(t => ({ t, done: false }));
 const defaults = () => ({
   dev: {
@@ -328,7 +327,7 @@ const defaults = () => ({
   activeRoutine: 'Evening Wind-down',
   automations: [{ id: 1, time: '22:30', scene: 'alloff', on: true, last: '' }]
 });
- 
+
 function merge(raw) {
   const d = defaults();
   if (!raw || typeof raw !== 'object') return d;
@@ -350,13 +349,13 @@ function merge(raw) {
 let S;
 try { S = merge(JSON.parse(localStorage.getItem(KEY) || 'null')); } catch (_) { S = defaults(); }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (_) {} }
- 
+
 /* ---------- units ---------- */
 const f2c = f => (f - 32) * 5 / 9;
 const disp = f => S.prefs.unit === 'C' ? Math.round(f2c(f) * 2) / 2 : Math.round(f);
 const fmt = f => `${disp(f)}°${S.prefs.unit}`;
 const toF = (v, unit) => unit === 'C' ? Math.round(v * 9 / 5 + 32) : Math.round(v);
- 
+
 /* ---------- scenes ---------- */
 const eachRoom = (d, fn) => Object.keys(d.rooms).forEach((k, i) => fn(d.rooms[k], k, i));
 const SCENES = {
@@ -367,7 +366,7 @@ const SCENES = {
   morning: { icon: '☀️', name: 'Good Morning', desc: 'Lights 70% · disarm · 71°F', match: /\bgood morning\b|\bwake up\b/, apply(d) { d.brightness = 70; eachRoom(d, (r, k) => { r.on = k === 'kitchen' || k === 'living'; r.color = '#fde68a'; }); d.armed = false; d.target = 71; } },
   away: { icon: '🚪', name: 'Away', desc: 'Lights off · lock · eco', match: /\b(i'?m (leaving|going out)|away mode|leaving (home|the house))\b/, apply(d) { eachRoom(d, r => { r.on = false; }); d.locked = true; d.armed = true; d.mode = 'eco'; d.nowPlaying = null; } }
 };
- 
+
 /* ---------- announce / toast / alert ---------- */
 function announce(msg) { const a = $('#srAnnouncer'); a.textContent = ''; setTimeout(() => { a.textContent = msg; }, 30); }
 function speak(text) {
@@ -380,8 +379,8 @@ function toast(msg, { undo = false } = {}) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('#toast').hidden = true; }, 6000);
 }
 function showAlert(msg) { $('#alertText').textContent = msg; $('#alertBar').hidden = false; announce(msg); speak(msg); }
- 
-/* ---------- activity log (real latency, not a fake number) ---------- */
+
+/* ---------- activity log ---------- */
 const mcp = { n: 0, total: 0, logs: [] };
 function logEvent(operation, params, response, ms) {
   mcp.n++; mcp.total += ms || 0;
@@ -394,7 +393,7 @@ function renderLog() {
   $('#avgLat').textContent = (mcp.n ? mcp.total / mcp.n : 0).toFixed(1);
   $('#mcpLog').textContent = mcp.logs.length ? JSON.stringify(mcp.logs, null, 2) : '{ "status": "ready" }';
 }
- 
+
 /* ---------- state mutation with undo ---------- */
 const history = [];
 function commit(label, mut, { silent = false } = {}) {
@@ -418,7 +417,7 @@ function undo() {
   logEvent('device.undo', { change: h.label }, { status: 'success' }, 0);
   return true;
 }
- 
+
 /* ---------- climate + energy model ---------- */
 function hvac(d) {
   const diff = d.ambient - d.target, db = d.mode === 'eco' ? 3 : 0.5;
@@ -443,7 +442,7 @@ function tick() {
   energyHist.push(watts(d).total); if (energyHist.length > 40) energyHist.shift();
   renderClimate(); renderEnergy(); save();
 }
- 
+
 /* ---------- party cycling ---------- */
 let partyTimer = null, partyOffset = 0;
 function syncParty() {
@@ -451,7 +450,7 @@ function syncParty() {
   if (want && !partyTimer) partyTimer = setInterval(() => { partyOffset++; eachRoom(S.dev, (r, k, i) => { r.color = PARTY[(i + partyOffset) % PARTY.length]; }); renderLights(); }, 1500);
   if (!want && partyTimer) { clearInterval(partyTimer); partyTimer = null; }
 }
- 
+
 /* =====================  COMMAND ENGINE  ===================== */
 const RX = {
   query: /^(is|are|what|what's|whats|how|status|check|tell me|am i|which)\b/,
@@ -480,7 +479,6 @@ function splitClauses(t) {
       if (hasIntent || i === frags.length - 1) { out.push(buf); buf = ''; }
     });
   });
-  // merge a trailing intent-less fragment into the previous clause
   for (let i = out.length - 1; i > 0; i--) if (!INTENTS.some(x => x.test(out[i]))) { out[i - 1] += ' and ' + out[i]; out.splice(i, 1); }
   return out;
 }
@@ -488,7 +486,7 @@ const status = d => {
   const on = Object.keys(d.rooms).filter(k => d.rooms[k].on).map(k => ROOM_NAMES[k]);
   return `Lights: ${on.length ? on.join(', ') + ` at ${d.brightness}%` : 'all off'}. Climate: ${fmt(d.target)} target, ${fmt(d.ambient)} inside (${d.mode}, ${hvac(d)}). Door: ${d.locked ? 'locked' : 'unlocked'}. Alarm: ${d.armed ? 'armed' : 'disarmed'}.${d.nowPlaying ? ` Playing: ${d.nowPlaying}.` : ''}`;
 };
- 
+
 const HANDLERS = {
   scene(t) {
     const [key, sc] = Object.entries(SCENES).find(([, s]) => s.match.test(t));
@@ -561,19 +559,19 @@ const HANDLERS = {
     return { reply: `${name}: ${list.filter(x => x.done).length} of ${list.length} tasks done.`, fx: () => { S.activeRoutine = name; renderRoutines(); save(); } };
   }
 };
- 
+
 let pending = null;
 function interpret(raw) {
   const text = normalize(raw);
   if (!text) return { reply: 'Type or say a command.', ok: false };
- 
+
   if (pending) {
     if (RX.yes.test(text)) { const p = pending; pending = null; commit(p.label, p.mut); return { reply: p.reply, ok: true, actions: [p.label] }; }
     if (RX.no.test(text)) { pending = null; return { reply: 'Okay, cancelled.', ok: true }; }
     pending = null;
   }
   if (/^(undo|revert|take that back)\b/.test(text)) return { reply: undo() ? 'Undone.' : 'Nothing to undo.', ok: true };
-  if (/^(help|what can you do)\b/.test(text)) return { reply: 'I can control lights (rooms, %, colors), temperature and mode, locks, alarm, music and scenes. I understand several commands at once, e.g. "lock the door and dim the bedroom to 20%". Unlocking and disarming need your confirmation. Say "undo" to reverse the last change.', ok: true };
+  if (/^(help|what can you do)\b/.test(text)) return { reply: 'I can control lights, temperature, locks, alarm, music and scenes. I understand multiple commands at once, e.g. "lock the door and dim the bedroom to 20%". Unlocking and disarming require confirmation.', ok: true };
   if (/\b(status|summary|overview|what'?s on)\b/.test(text)) return { reply: status(S.dev), ok: true };
   const add = String(raw).trim().match(/^add\s+(.+?)\s+to\s+(?:my\s+|the\s+)?(.+?)(?:\s+(?:list|routine|checklist))?$/i);
   if (add) {
@@ -584,12 +582,12 @@ function interpret(raw) {
       return { reply: `Added "${task}" to ${hit[1]}.`, ok: true, actions: ['routine.add'] };
     }
   }
- 
+
   const muts = [], replies = [], labels = [], fxs = []; let confirm = null;
   splitClauses(text).forEach(clause => {
     const intent = INTENTS.find(x => x.test(clause));
     if (!intent) return;
-    if (RX.neg.test(clause)) { replies.push(`Okay, I won't change the ${intent.name === 'climate' ? 'thermostat' : intent.name}.`); return; }
+    if (RX.neg.test(clause)) { replies.push(`Okay, I won't change the ${intent.name}.`); return; }
     const q = RX.query.test(clause) || (/\?\s*$/.test(clause) && !/\b(turn|set|switch|make|lock|unlock|arm|disarm|play|dim|start|open|close)\b/.test(clause));
     const r = HANDLERS[intent.name](clause, q, S.dev);
     if (r.reply) replies.push(r.reply);
@@ -597,14 +595,14 @@ function interpret(raw) {
     if (r.fx) fxs.push(r.fx);
     if (r.confirm) confirm = r.confirm;
   });
- 
-  if (!replies.length) return { reply: `Sorry, I didn't understand "${raw.trim().slice(0, 60)}", so I did nothing. Try "dim the bedroom lights to 30%", "set the temperature to ${disp(70)}", "lock the door", or "good night".`, ok: false };
+
+  if (!replies.length) return { reply: `Sorry, I didn't understand "${raw.trim().slice(0, 60)}". Try "dim the bedroom lights to 30%", "set temperature to 70", or "lock the door".`, ok: false };
   if (muts.length) commit(labels.length > 1 ? `${labels.length} changes` : labels[0], d => muts.forEach(m => m(d)));
   fxs.forEach(f => f());
   if (confirm) pending = confirm;
   return { reply: replies.join(' '), ok: true, actions: labels, confirm: !!confirm };
 }
- 
+
 function handleInput(text, source = 'text') {
   const clean = text.trim(); if (!clean) return;
   addMsg('user', clean);
@@ -613,7 +611,7 @@ function handleInput(text, source = 'text') {
   addMsg('assistant', res.reply, { confirm: res.confirm });
   logEvent('assistant.command', { prompt: clean.slice(0, 120), source }, { status: res.ok ? 'success' : 'unrecognized', actions: res.actions || [] }, performance.now() - t0);
 }
- 
+
 /* =====================  RENDERING  ===================== */
 function addMsg(role, text, { confirm = false } = {}) {
   const box = $('#chatBox');
@@ -626,14 +624,13 @@ function addMsg(role, text, { confirm = false } = {}) {
   box.append(m); box.scrollTop = box.scrollHeight;
   if (role === 'assistant') speak(text);
 }
- 
+
 function buildStatic() {
-  // scenes
   const sc = $('#scenes');
   Object.entries(SCENES).forEach(([k, s]) => sc.append(el('button', { class: 'scene', type: 'button', onclick: () => commit(`${s.name} scene`, d => s.apply(d)) },
     el('span', { 'aria-hidden': 'true', style: 'font-size:1.2rem', text: s.icon }), el('b', { text: s.name }), el('span', { class: 'd', text: s.desc }))));
   $('#autoScene').append(...Object.entries(SCENES).map(([k, s]) => el('option', { value: k, text: `${s.icon} ${s.name}` })));
-  // rooms
+  
   const rooms = $('#rooms');
   Object.keys(ROOM_NAMES).forEach(k => {
     rooms.append(el('div', { class: 'room' },
@@ -642,21 +639,21 @@ function buildStatic() {
       el('div', { class: 'row between tiny muted' }, el('label', { for: `col-${k}`, text: 'Color' }),
         el('input', { type: 'color', id: `col-${k}`, 'aria-label': `${ROOM_NAMES[k]} light color`, onchange: e => commit(`${ROOM_NAMES[k]} color`, d => { d.rooms[k].color = e.target.value; }, { silent: true }) }))));
   });
-  // modes
+
   $('#modes').append(...Object.entries(MODES).map(([k, n]) => el('button', { class: 'btn sm', type: 'button', 'data-mode': k, text: n, onclick: () => commit(`Climate mode ${n}`, d => { d.mode = k; }, { silent: true }) })));
-  // chips
   ['Good night', 'Dim the lights to 30%', 'Set the temperature to 70', 'Is the door locked?', 'Status'].forEach(c => $('#chips').append(el('button', { class: 'chip', type: 'button', text: c, onclick: () => handleInput(c, 'chip') })));
-  // settings radios
+
   const radios = (host, name, opts, cur, onChange) => host.replaceChildren(...opts.map(([v, label]) => el('label', {}, el('input', { type: 'radio', name, value: v, checked: String(cur()) === String(v), onchange: () => onChange(v) }), el('span', { text: label }))));
   radios($('#themeRadios'), 'theme', [['auto', 'Auto'], ['dark', 'Dark'], ['light', 'Light']], () => S.prefs.theme, v => setPref('theme', v));
   radios($('#fontRadios'), 'font', [[14, 'Small'], [16, 'Medium'], [18, 'Large'], [21, 'Extra large']], () => S.prefs.font, v => setPref('font', +v));
   radios($('#unitRadios'), 'unit', [['F', '°F'], ['C', '°C']], () => S.prefs.unit, v => setPref('unit', v));
+  
   const a11y = $('#a11yOpts');
   [['contrast', 'High contrast'], ['reduceMotion', 'Reduce motion'], ['dyslexia', 'Dyslexia-friendly font'], ['bigTargets', 'Large touch targets'], ['tts', 'Spoken replies and alerts']].forEach(([k, label]) => {
     a11y.append(el('div', { class: 'opt' }, el('span', { id: `lbl-${k}`, text: label }), el('button', { class: 'switch', type: 'button', role: 'switch', id: `pref-${k}`, 'aria-labelledby': `lbl-${k}`, onclick: () => setPref(k, !S.prefs[k]) })));
   });
 }
- 
+
 function renderLights() {
   const d = S.dev;
   Object.keys(ROOM_NAMES).forEach(k => {
@@ -666,7 +663,6 @@ function renderLights() {
   const any = Object.values(d.rooms).some(r => r.on);
   $('#masterBtn').textContent = any ? 'All off' : 'All on';
   $('#brightness').value = d.brightness; $('#brightVal').textContent = `${d.brightness}%`;
-  $('#brightness').setAttribute('aria-valuetext', `${d.brightness} percent`);
 }
 function renderClimate() {
   const d = S.dev, h = hvac(d);
@@ -696,13 +692,13 @@ function renderEnergy() {
   const parts = [['air conditioning/heating', w.hv], ['lights', w.lights], ['media', w.media]].sort((a, b) => b[1] - a[1]);
   $('#energyTip').textContent = parts[0][1] === 0 ? 'Everything is idling. Nice and efficient.' :
     parts[0][0].startsWith('air') ? `Climate is your biggest draw. Eco mode or ${fmt(d.target + (d.mode === 'heat' ? -2 : 2))} would trim it.` :
-      parts[0][0] === 'lights' ? `Lights are your biggest draw. Dimming to ${Math.max(10, d.brightness - 30)}% saves about ${Math.round(w.lights * 0.3)} W.` : 'Media is your biggest draw right now.';
+      parts[0][0] === 'lights' ? `Lights are your biggest draw. Dimming saves energy.` : 'Media is your biggest draw right now.';
   const svg = $('#spark'); svg.replaceChildren();
   if (energyHist.length > 1) {
     const max = Math.max(...energyHist, 400), n = energyHist.length - 1;
     const pts = energyHist.map((v, i) => `${(i / n) * 120},${31 - (v / max) * 29}`).join(' ');
     const pl = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-    pl.setAttribute('points', pts); pl.setAttribute('fill', 'none'); pl.setAttribute('stroke', 'var(--accent)'); pl.setAttribute('stroke-width', '1.6'); pl.setAttribute('vector-effect', 'non-scaling-stroke');
+    pl.setAttribute('points', pts); pl.setAttribute('fill', 'none'); pl.setAttribute('stroke', 'var(--accent)'); pl.setAttribute('stroke-width', '1.6');
     svg.append(pl);
   }
 }
@@ -719,8 +715,6 @@ function renderRoutines() {
   });
   const done = list.filter(x => x.done).length, pct = list.length ? Math.round(done / list.length * 100) : 0;
   $('#routineText').textContent = `${done} / ${list.length}`; $('#routineBar').style.width = `${pct}%`; $('#routineBarWrap').setAttribute('aria-valuenow', pct);
-  if (list.length && done === list.length && !renderRoutines.celebrated) { renderRoutines.celebrated = true; announce(`${S.activeRoutine} complete`); toast(`${S.activeRoutine} complete 🎉`); }
-  if (done < list.length) renderRoutines.celebrated = false;
 }
 function renderAutomations() {
   const ul = $('#autoList'); ul.replaceChildren();
@@ -756,9 +750,9 @@ function applyPrefs() {
   renderPrefsControls(); syncParty();
 }
 function setPref(k, v) { S.prefs[k] = v; save(); applyPrefs(); render(); announce(`${k} updated`); }
- 
+
 function render() { renderLights(); renderClimate(); renderSecurity(); renderMedia(); renderEnergy(); syncParty(); $('#undoBtn').disabled = history.length === 0; }
- 
+
 /* =====================  EVENTS  ===================== */
 function bind() {
   $('#masterBtn').addEventListener('click', () => { const any = Object.values(S.dev.rooms).some(r => r.on); commit(any ? 'All lights off' : 'All lights on', d => eachRoom(d, r => { r.on = !any; })); });
@@ -783,7 +777,7 @@ function bind() {
   $('#alertClose').addEventListener('click', () => { $('#alertBar').hidden = true; });
   $('#undoBtn').addEventListener('click', undo);
   $('#toastUndo').addEventListener('click', () => { undo(); });
-  $('#clearChat').addEventListener('click', () => { $('#chatBox').replaceChildren(); pending = null; announce('Chat cleared'); });
+  $('#clearChat').addEventListener('click', () => { $('#chatBox').replaceChildren(); pending = null; addMsg('system', 'Conversation cleared. Type a command or try a suggestion.'); announce('Chat cleared'); });
   $('#clearLog').addEventListener('click', () => { mcp.n = 0; mcp.total = 0; mcp.logs = []; renderLog(); });
   $('#copyLog').addEventListener('click', async () => { try { await navigator.clipboard.writeText(JSON.stringify(mcp.logs, null, 2)); toast('Log copied'); } catch (_) { toast('Copy not available here'); } });
   $('#resetRoutine').addEventListener('click', () => { (S.routines[S.activeRoutine] || []).forEach(x => { x.done = false; }); save(); renderRoutines(); announce('Routine reset'); });
@@ -808,8 +802,7 @@ function bind() {
     e.target.value = '';
   });
   $('#resetAll').addEventListener('click', () => { if (!confirm('Reset all HomeCue settings and data on this device?')) return; S = defaults(); history.length = 0; save(); applyPrefs(); render(); renderRoutines(); renderAutomations(); toast('Reset to defaults'); });
-  mq('(prefers-color-scheme: light)').addEventListener && mq('(prefers-color-scheme: light)').addEventListener('change', () => { if (S.prefs.theme === 'auto') applyPrefs(); });
- 
+
   document.addEventListener('keydown', e => {
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || '')) && e.target.type !== 'range' && e.target.type !== 'checkbox';
     if (e.altKey && e.code === 'KeyM') { e.preventDefault(); $('#micBtn').click(); }
@@ -821,8 +814,7 @@ function bind() {
   });
 }
 function cycleTheme() { const order = ['auto', 'dark', 'light']; setPref('theme', order[(order.indexOf(S.prefs.theme) + 1) % 3]); toast(`Theme: ${S.prefs.theme}`); }
- 
-/* ---------- voice input ---------- */
+
 function setupVoice() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition, mic = $('#micBtn');
   if (!SR) { mic.disabled = true; mic.title = 'Voice input is not supported in this browser'; mic.setAttribute('aria-label', 'Voice input unavailable in this browser'); return; }
@@ -831,11 +823,10 @@ function setupVoice() {
   rec.onstart = () => { on = true; $('#voiceStatus').hidden = false; mic.classList.add('rec'); announce('Listening'); };
   rec.onend = () => { on = false; $('#voiceStatus').hidden = true; mic.classList.remove('rec'); };
   rec.onresult = e => handleInput(e.results[0][0].transcript, 'voice');
-  rec.onerror = e => addMsg('system', e.error === 'not-allowed' ? 'Microphone permission was denied. You can still type commands.' : e.error === 'no-speech' ? "I didn't hear anything. Tap the mic and try again." : `Voice input problem (${e.error}). You can still type commands.`);
+  rec.onerror = e => addMsg('system', e.error === 'not-allowed' ? 'Microphone permission denied.' : `Voice input issue (${e.error}).`);
   mic.addEventListener('click', () => { try { on ? rec.stop() : rec.start(); } catch (_) {} });
 }
- 
-/* ---------- automations scheduler ---------- */
+
 function runAutomations(now = new Date()) {
   const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`, day = now.toDateString();
   S.automations.forEach(a => {
@@ -845,8 +836,7 @@ function runAutomations(now = new Date()) {
     showAlert(`Automation ran: ${SCENES[a.scene].name} (${a.time}).`);
   });
 }
- 
-/* ---------- init ---------- */
+
 function init() {
   buildStatic(); bind(); setupVoice();
   applyPrefs(); render(); renderRoutines(); renderAutomations(); renderLog();
