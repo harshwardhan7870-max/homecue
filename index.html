@@ -84,7 +84,7 @@ input[type=color]{width:2.75rem;height:2.75rem;border:1px solid var(--border);bo
 .bar>div{height:100%;background:var(--ok);width:0;transition:width .3s}
 pre.log{margin:0;max-height:15rem;overflow:auto;background:rgba(0,0,0,.35);color:#86efac;border:1px solid var(--border);border-radius:.8rem;padding:.7rem;font-size:.68rem;line-height:1.5}
 [data-theme="light"] pre.log{background:#0f172a}
-#toast{position:fixed;left:50%;bottom:1.25rem;transform:translateX(-50%);z-index:40;display:flex;gap:.75rem;align-items:center;background:var(--text);color:var(--bg);background:var(--text);padding:.65rem .9rem;border-radius:.9rem;box-shadow:var(--shadow);max-width:92vw;font-size:.85rem}
+#toast{position:fixed;left:50%;bottom:1.25rem;transform:translateX(-50%);z-index:40;display:flex;gap:.75rem;align-items:center;background:var(--text);color:var(--bg);padding:.65rem .9rem;border-radius:.9rem;box-shadow:var(--shadow);max-width:92vw;font-size:.85rem}
 #toast[hidden]{display:none}
 #toast .btn{min-height:2rem;background:var(--accent);color:var(--accent-ink);border-color:transparent}
 #alertBar{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--bad);color:#fff;padding:.8rem 1rem;border-radius:.9rem;margin-bottom:1rem;font-weight:650}
@@ -279,12 +279,7 @@ svg#spark{width:100%;height:2.4rem;display:block}
 
 <script>
 'use strict';
-/* =====================================================================
-   HomeCue 3.0
-   - Local-first: state lives in localStorage; no network calls.
-   - One command engine for chat, voice, and chips.
-   - Everything is undoable. Everything is announced to screen readers.
-   ===================================================================== */
+
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 function el(tag, props = {}, ...kids) {
@@ -301,6 +296,49 @@ function el(tag, props = {}, ...kids) {
 }
 const clampN = (n, a, b) => Math.min(b, Math.max(a, n));
 const mq = q => (window.matchMedia ? window.matchMedia(q) : { matches: false, addEventListener() {} });
+
+// --- Cache Common DOM Elements ---
+const DOM = {};
+function cacheDOM() {
+  DOM.srAnnouncer = $('#srAnnouncer');
+  DOM.chatBox = $('#chatBox');
+  DOM.userInput = $('#userInput');
+  DOM.reqCount = $('#reqCount');
+  DOM.avgLat = $('#avgLat');
+  DOM.mcpLog = $('#mcpLog');
+  DOM.toast = $('#toast');
+  DOM.toastMsg = $('#toastMsg');
+  DOM.toastUndo = $('#toastUndo');
+  DOM.alertBar = $('#alertBar');
+  DOM.alertText = $('#alertText');
+  DOM.masterBtn = $('#masterBtn');
+  DOM.brightness = $('#brightness');
+  DOM.brightVal = $('#brightVal');
+  DOM.tempVal = $('#tempVal');
+  DOM.ambientVal = $('#ambientVal');
+  DOM.hvacChip = $('#hvacChip');
+  DOM.lockLabel = $('#lockLabel');
+  DOM.lockIcon = $('#lockIcon');
+  DOM.lockBtn = $('#lockBtn');
+  DOM.alarmLabel = $('#alarmLabel');
+  DOM.alarmIcon = $('#alarmIcon');
+  DOM.alarmBtn = $('#alarmBtn');
+  DOM.alarmChip = $('#alarmChip');
+  DOM.nowPlaying = $('#nowPlaying');
+  DOM.mediaBtn = $('#mediaBtn');
+  DOM.volSlider = $('#volSlider');
+  DOM.volVal = $('#volVal');
+  DOM.wattsNow = $('#wattsNow');
+  DOM.costDay = $('#costDay');
+  DOM.energyTip = $('#energyTip');
+  DOM.spark = $('#spark');
+  DOM.checklist = $('#checklist');
+  DOM.routineText = $('#routineText');
+  DOM.routineBar = $('#routineBar');
+  DOM.routineBarWrap = $('#routineBarWrap');
+  DOM.autoList = $('#autoList');
+  DOM.undoBtn = $('#undoBtn');
+}
 
 const KEY = 'homecue.v3';
 const ROOM_NAMES = { living: 'Living Room', kitchen: 'Kitchen', bedroom: 'Bedroom', office: 'Office' };
@@ -346,6 +384,7 @@ function merge(raw) {
   if (Array.isArray(raw.automations)) d.automations = raw.automations.filter(a => a && /^\d\d:\d\d$/.test(a.time)).map((a, i) => ({ id: a.id || i + 1, time: a.time, scene: a.scene, on: !!a.on, last: '' }));
   return d;
 }
+
 let S;
 try { S = merge(JSON.parse(localStorage.getItem(KEY) || 'null')); } catch (_) { S = defaults(); }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (_) {} }
@@ -368,17 +407,17 @@ const SCENES = {
 };
 
 /* ---------- announce / toast / alert ---------- */
-function announce(msg) { const a = $('#srAnnouncer'); a.textContent = ''; setTimeout(() => { a.textContent = msg; }, 30); }
+function announce(msg) { DOM.srAnnouncer.textContent = ''; setTimeout(() => { DOM.srAnnouncer.textContent = msg; }, 30); }
 function speak(text) {
   if (!S.prefs.tts || !('speechSynthesis' in window)) return;
   try { speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(text)); } catch (_) {}
 }
 let toastTimer;
 function toast(msg, { undo = false } = {}) {
-  $('#toastMsg').textContent = msg; $('#toastUndo').hidden = !undo; $('#toast').hidden = false;
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('#toast').hidden = true; }, 6000);
+  DOM.toastMsg.textContent = msg; DOM.toastUndo.hidden = !undo; DOM.toast.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { DOM.toast.hidden = true; }, 6000);
 }
-function showAlert(msg) { $('#alertText').textContent = msg; $('#alertBar').hidden = false; announce(msg); speak(msg); }
+function showAlert(msg) { DOM.alertText.textContent = msg; DOM.alertBar.hidden = false; announce(msg); speak(msg); }
 
 /* ---------- activity log ---------- */
 const mcp = { n: 0, total: 0, logs: [] };
@@ -389,9 +428,9 @@ function logEvent(operation, params, response, ms) {
   renderLog();
 }
 function renderLog() {
-  $('#reqCount').textContent = mcp.n;
-  $('#avgLat').textContent = (mcp.n ? mcp.total / mcp.n : 0).toFixed(1);
-  $('#mcpLog').textContent = mcp.logs.length ? JSON.stringify(mcp.logs, null, 2) : '{ "status": "ready" }';
+  DOM.reqCount.textContent = mcp.n;
+  DOM.avgLat.textContent = (mcp.n ? mcp.total / mcp.n : 0).toFixed(1);
+  DOM.mcpLog.textContent = mcp.logs.length ? JSON.stringify(mcp.logs, null, 2) : '{ "status": "ready" }';
 }
 
 /* ---------- state mutation with undo ---------- */
@@ -614,14 +653,19 @@ function handleInput(text, source = 'text') {
 
 /* =====================  RENDERING  ===================== */
 function addMsg(role, text, { confirm = false } = {}) {
-  const box = $('#chatBox');
   const m = el('div', { class: `msg ${role}` }, text);
   if (confirm) {
     m.append(el('div', { class: 'row', style: 'margin-top:.5rem' },
       el('button', { class: 'btn sm primary', type: 'button', text: 'Confirm', onclick: () => handleInput('confirm') }),
       el('button', { class: 'btn sm', type: 'button', text: 'Cancel', onclick: () => handleInput('cancel') })));
   }
-  box.append(m); box.scrollTop = box.scrollHeight;
+  DOM.chatBox.append(m); 
+  
+  // Smooth scroll performance optimization
+  requestAnimationFrame(() => {
+    DOM.chatBox.scrollTop = DOM.chatBox.scrollHeight;
+  });
+
   if (role === 'assistant') speak(text);
 }
 
@@ -661,73 +705,102 @@ function renderLights() {
     const c = $(`#col-${k}`); if (c.value !== d.rooms[k].color) c.value = d.rooms[k].color;
   });
   const any = Object.values(d.rooms).some(r => r.on);
-  $('#masterBtn').textContent = any ? 'All off' : 'All on';
-  $('#brightness').value = d.brightness; $('#brightVal').textContent = `${d.brightness}%`;
+  DOM.masterBtn.textContent = any ? 'All off' : 'All on';
+  DOM.brightness.value = d.brightness; DOM.brightVal.textContent = `${d.brightness}%`;
 }
+
 function renderClimate() {
   const d = S.dev, h = hvac(d);
-  $('#tempVal').textContent = fmt(d.target);
-  $('#ambientVal').textContent = `Target · ${fmt(d.ambient)} inside now`;
-  const chip = $('#hvacChip'); chip.textContent = h === 'cooling' ? '❄ Cooling' : h === 'heating' ? '🔥 Heating' : '✓ Holding'; chip.className = `pill ${h === 'idle' ? 'ok' : 'cool'}`;
+  DOM.tempVal.textContent = fmt(d.target);
+  DOM.ambientVal.textContent = `Target · ${fmt(d.ambient)} inside now`;
+  DOM.hvacChip.textContent = h === 'cooling' ? '❄ Cooling' : h === 'heating' ? '🔥 Heating' : '✓ Holding'; DOM.hvacChip.className = `pill ${h === 'idle' ? 'ok' : 'cool'}`;
   $$('#modes .btn').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === d.mode)));
 }
+
 function renderSecurity() {
   const d = S.dev;
-  $('#lockLabel').textContent = d.locked ? 'Locked' : 'Unlocked'; $('#lockIcon').textContent = d.locked ? '🔒' : '🔓';
-  $('#lockBtn').setAttribute('aria-pressed', String(d.locked));
-  $('#alarmLabel').textContent = d.armed ? 'Armed (Away)' : 'Disarmed'; $('#alarmIcon').textContent = d.armed ? '🔔' : '🔕';
-  $('#alarmBtn').setAttribute('aria-pressed', String(d.armed));
-  const chip = $('#alarmChip'); chip.textContent = d.armed ? 'Armed' : 'Disarmed'; chip.className = `pill ${d.armed ? 'bad' : 'ok'}`;
+  DOM.lockLabel.textContent = d.locked ? 'Locked' : 'Unlocked'; DOM.lockIcon.textContent = d.locked ? '🔒' : '🔓';
+  DOM.lockBtn.setAttribute('aria-pressed', String(d.locked));
+  DOM.alarmLabel.textContent = d.armed ? 'Armed (Away)' : 'Disarmed'; DOM.alarmIcon.textContent = d.armed ? '🔔' : '🔕';
+  DOM.alarmBtn.setAttribute('aria-pressed', String(d.armed));
+  DOM.alarmChip.textContent = d.armed ? 'Armed' : 'Disarmed'; DOM.alarmChip.className = `pill ${d.armed ? 'bad' : 'ok'}`;
 }
+
 function renderMedia() {
   const d = S.dev;
-  $('#nowPlaying').textContent = d.nowPlaying ? `♪ ${d.nowPlaying}` : 'Nothing playing';
-  const b = $('#mediaBtn'); b.textContent = d.nowPlaying ? '⏸ Pause' : '▶ Play'; b.setAttribute('aria-pressed', String(!!d.nowPlaying));
-  $('#volSlider').value = d.volume; $('#volVal').textContent = d.volume;
+  DOM.nowPlaying.textContent = d.nowPlaying ? `♪ ${d.nowPlaying}` : 'Nothing playing';
+  DOM.mediaBtn.textContent = d.nowPlaying ? '⏸ Pause' : '▶ Play'; DOM.mediaBtn.setAttribute('aria-pressed', String(!!d.nowPlaying));
+  DOM.volSlider.value = d.volume; DOM.volVal.textContent = d.volume;
 }
+
 function renderEnergy() {
   const d = S.dev, w = watts(d), kwh = w.total * 24 / 1000, cost = kwh * S.prefs.rate;
-  $('#wattsNow').textContent = w.total >= 1000 ? `${(w.total / 1000).toFixed(2)} kW` : `${w.total} W`;
-  $('#costDay').textContent = `${kwh.toFixed(1)} kWh · ${S.prefs.cur}${cost.toFixed(2)}`;
+  DOM.wattsNow.textContent = w.total >= 1000 ? `${(w.total / 1000).toFixed(2)} kW` : `${w.total} W`;
+  DOM.costDay.textContent = `${kwh.toFixed(1)} kWh · ${S.prefs.cur}${cost.toFixed(2)}`;
   const parts = [['air conditioning/heating', w.hv], ['lights', w.lights], ['media', w.media]].sort((a, b) => b[1] - a[1]);
-  $('#energyTip').textContent = parts[0][1] === 0 ? 'Everything is idling. Nice and efficient.' :
+  DOM.energyTip.textContent = parts[0][1] === 0 ? 'Everything is idling. Nice and efficient.' :
     parts[0][0].startsWith('air') ? `Climate is your biggest draw. Eco mode or ${fmt(d.target + (d.mode === 'heat' ? -2 : 2))} would trim it.` :
       parts[0][0] === 'lights' ? `Lights are your biggest draw. Dimming saves energy.` : 'Media is your biggest draw right now.';
-  const svg = $('#spark'); svg.replaceChildren();
+  
+  DOM.spark.replaceChildren();
   if (energyHist.length > 1) {
     const max = Math.max(...energyHist, 400), n = energyHist.length - 1;
     const pts = energyHist.map((v, i) => `${(i / n) * 120},${31 - (v / max) * 29}`).join(' ');
     const pl = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
     pl.setAttribute('points', pts); pl.setAttribute('fill', 'none'); pl.setAttribute('stroke', 'var(--accent)'); pl.setAttribute('stroke-width', '1.6');
-    svg.append(pl);
+    DOM.spark.append(pl);
   }
 }
+
+// Optimized Routine Progress Updates (Avoids total list re-renders on checkbox clicks)
+function updateRoutineProgress() {
+  const list = S.routines[S.activeRoutine] || [];
+  const done = list.filter(x => x.done).length, pct = list.length ? Math.round(done / list.length * 100) : 0;
+  DOM.routineText.textContent = `${done} / ${list.length}`; 
+  DOM.routineBar.style.width = `${pct}%`; 
+  DOM.routineBarWrap.setAttribute('aria-valuenow', pct);
+}
+
 function renderRoutines() {
   const sel = $('#routineSelect');
   sel.replaceChildren(...Object.keys(S.routines).map(n => el('option', { value: n, text: n, selected: n === S.activeRoutine })));
-  const list = S.routines[S.activeRoutine] || [], ul = $('#checklist'); ul.replaceChildren();
+  const list = S.routines[S.activeRoutine] || [];
+  DOM.checklist.replaceChildren();
+  
   list.forEach((task, i) => {
     const id = `task-${i}`;
-    ul.append(el('li', { class: `li${task.done ? ' done' : ''}` },
-      el('input', { type: 'checkbox', id, checked: task.done, onchange: e => { task.done = e.target.checked; save(); renderRoutines(); } }),
+    const li = el('li', { class: `li${task.done ? ' done' : ''}` },
+      el('input', { type: 'checkbox', id, checked: task.done, onchange: e => {
+        task.done = e.target.checked; 
+        li.classList.toggle('done', task.done);
+        save(); 
+        updateRoutineProgress(); 
+      } }),
       el('label', { for: id, text: task.t }),
-      el('button', { class: 'btn sm icon', type: 'button', 'aria-label': `Delete task: ${task.t}`, text: '✕', onclick: () => { list.splice(i, 1); save(); renderRoutines(); announce('Task deleted'); } })));
+      el('button', { class: 'btn sm icon', type: 'button', 'aria-label': `Delete task: ${task.t}`, text: '✕', onclick: () => { 
+        list.splice(i, 1); 
+        save(); 
+        renderRoutines(); 
+        announce('Task deleted'); 
+      } }));
+    DOM.checklist.append(li);
   });
-  const done = list.filter(x => x.done).length, pct = list.length ? Math.round(done / list.length * 100) : 0;
-  $('#routineText').textContent = `${done} / ${list.length}`; $('#routineBar').style.width = `${pct}%`; $('#routineBarWrap').setAttribute('aria-valuenow', pct);
+  updateRoutineProgress();
 }
+
 function renderAutomations() {
-  const ul = $('#autoList'); ul.replaceChildren();
-  if (!S.automations.length) ul.append(el('li', { class: 'small muted', text: 'No automations yet.' }));
+  DOM.autoList.replaceChildren();
+  if (!S.automations.length) DOM.autoList.append(el('li', { class: 'small muted', text: 'No automations yet.' }));
   S.automations.forEach(a => {
     const sc = SCENES[a.scene]; if (!sc) return;
-    ul.append(el('li', { class: 'li' },
+    DOM.autoList.append(el('li', { class: 'li' },
       el('span', {}, el('b', { class: 'mono', text: a.time }), ` ${sc.icon} ${sc.name}`),
       el('span', { class: 'row' },
         el('button', { class: 'switch', type: 'button', role: 'switch', 'aria-checked': String(a.on), 'aria-label': `Automation ${a.time} ${sc.name}`, onclick: () => { a.on = !a.on; save(); renderAutomations(); } }),
         el('button', { class: 'btn sm icon', type: 'button', 'aria-label': `Delete automation ${a.time} ${sc.name}`, text: '✕', onclick: () => { S.automations = S.automations.filter(x => x !== a); save(); renderAutomations(); } }))));
   });
 }
+
 function renderPrefsControls() {
   const p = S.prefs;
   ['contrast', 'reduceMotion', 'dyslexia', 'bigTargets', 'tts'].forEach(k => $(`#pref-${k}`).setAttribute('aria-checked', String(!!p[k])));
@@ -736,6 +809,7 @@ function renderPrefsControls() {
   $$('#fontRadios input').forEach(i => { i.checked = +i.value === p.font; });
   $$('#unitRadios input').forEach(i => { i.checked = i.value === p.unit; });
 }
+
 let fontLink;
 function applyPrefs() {
   const p = S.prefs, root = document.documentElement;
@@ -751,40 +825,40 @@ function applyPrefs() {
 }
 function setPref(k, v) { S.prefs[k] = v; save(); applyPrefs(); render(); announce(`${k} updated`); }
 
-function render() { renderLights(); renderClimate(); renderSecurity(); renderMedia(); renderEnergy(); syncParty(); $('#undoBtn').disabled = history.length === 0; }
+function render() { renderLights(); renderClimate(); renderSecurity(); renderMedia(); renderEnergy(); syncParty(); DOM.undoBtn.disabled = history.length === 0; }
 
 /* =====================  EVENTS  ===================== */
 function bind() {
-  $('#masterBtn').addEventListener('click', () => { const any = Object.values(S.dev.rooms).some(r => r.on); commit(any ? 'All lights off' : 'All lights on', d => eachRoom(d, r => { r.on = !any; })); });
+  DOM.masterBtn.addEventListener('click', () => { const any = Object.values(S.dev.rooms).some(r => r.on); commit(any ? 'All lights off' : 'All lights on', d => eachRoom(d, r => { r.on = !any; })); });
   let sliderSnap = null;
   const startSlide = () => { if (!sliderSnap) sliderSnap = JSON.stringify(S.dev); };
-  const endSlide = label => { if (sliderSnap) { history.push({ label, s: sliderSnap }); sliderSnap = null; save(); $('#undoBtn').disabled = false; announce(label); } };
-  $('#brightness').addEventListener('input', e => { startSlide(); S.dev.party = false; S.dev.brightness = +e.target.value; renderLights(); renderEnergy(); });
-  $('#brightness').addEventListener('change', () => endSlide(`Brightness ${S.dev.brightness}%`));
-  $('#volSlider').addEventListener('input', e => { startSlide(); S.dev.volume = +e.target.value; renderMedia(); });
-  $('#volSlider').addEventListener('change', () => endSlide(`Volume ${S.dev.volume}`));
-  $('#mediaBtn').addEventListener('click', () => commit(S.dev.nowPlaying ? 'Music paused' : 'Playing Relaxing Lofi Beats', d => { d.nowPlaying = d.nowPlaying ? null : 'Relaxing Lofi Beats'; }, { silent: true }));
+  const endSlide = label => { if (sliderSnap) { history.push({ label, s: sliderSnap }); sliderSnap = null; save(); DOM.undoBtn.disabled = false; announce(label); } };
+  DOM.brightness.addEventListener('input', e => { startSlide(); S.dev.party = false; S.dev.brightness = +e.target.value; renderLights(); renderEnergy(); });
+  DOM.brightness.addEventListener('change', () => endSlide(`Brightness ${S.dev.brightness}%`));
+  DOM.volSlider.addEventListener('input', e => { startSlide(); S.dev.volume = +e.target.value; renderMedia(); });
+  DOM.volSlider.addEventListener('change', () => endSlide(`Volume ${S.dev.volume}`));
+  DOM.mediaBtn.addEventListener('click', () => commit(S.dev.nowPlaying ? 'Music paused' : 'Playing Relaxing Lofi Beats', d => { d.nowPlaying = d.nowPlaying ? null : 'Relaxing Lofi Beats'; }, { silent: true }));
   $('#tempDown').addEventListener('click', () => commit('Temperature lowered', d => { d.target--; }, { silent: true }));
   $('#tempUp').addEventListener('click', () => commit('Temperature raised', d => { d.target++; }, { silent: true }));
-  $('#lockBtn').addEventListener('click', () => commit(S.dev.locked ? 'Front door unlocked' : 'Front door locked', d => { d.locked = !d.locked; }));
-  $('#alarmBtn').addEventListener('click', () => commit(S.dev.armed ? 'Alarm disarmed' : 'Alarm armed', d => { d.armed = !d.armed; }));
+  DOM.lockBtn.addEventListener('click', () => commit(S.dev.locked ? 'Front door unlocked' : 'Front door locked', d => { d.locked = !d.locked; }));
+  DOM.alarmBtn.addEventListener('click', () => commit(S.dev.armed ? 'Alarm disarmed' : 'Alarm armed', d => { d.armed = !d.armed; }));
   $('#motionBtn').addEventListener('click', () => {
     const armed = S.dev.armed;
     logEvent('sensor.motion', { zone: 'front porch' }, { alarm_armed: armed }, 0);
     if (armed) showAlert('Motion detected at the front porch while the alarm is armed.');
     else { toast('Motion at the front porch (alarm disarmed, no alert)'); announce('Motion at the front porch. Alarm is disarmed.'); }
   });
-  $('#alertClose').addEventListener('click', () => { $('#alertBar').hidden = true; });
-  $('#undoBtn').addEventListener('click', undo);
-  $('#toastUndo').addEventListener('click', () => { undo(); });
-  $('#clearChat').addEventListener('click', () => { $('#chatBox').replaceChildren(); pending = null; addMsg('system', 'Conversation cleared. Type a command or try a suggestion.'); announce('Chat cleared'); });
+  $('#alertClose').addEventListener('click', () => { DOM.alertBar.hidden = true; });
+  DOM.undoBtn.addEventListener('click', undo);
+  DOM.toastUndo.addEventListener('click', () => { undo(); });
+  $('#clearChat').addEventListener('click', () => { DOM.chatBox.replaceChildren(); pending = null; addMsg('system', 'Conversation cleared. Type a command or try a suggestion.'); announce('Chat cleared'); });
   $('#clearLog').addEventListener('click', () => { mcp.n = 0; mcp.total = 0; mcp.logs = []; renderLog(); });
   $('#copyLog').addEventListener('click', async () => { try { await navigator.clipboard.writeText(JSON.stringify(mcp.logs, null, 2)); toast('Log copied'); } catch (_) { toast('Copy not available here'); } });
   $('#resetRoutine').addEventListener('click', () => { (S.routines[S.activeRoutine] || []).forEach(x => { x.done = false; }); save(); renderRoutines(); announce('Routine reset'); });
   $('#routineSelect').addEventListener('change', e => { S.activeRoutine = e.target.value; save(); renderRoutines(); });
   $('#addTaskForm').addEventListener('submit', e => { e.preventDefault(); const i = $('#newTask'), v = i.value.trim(); if (!v) return; S.routines[S.activeRoutine].push({ t: v.slice(0, 120), done: false }); i.value = ''; save(); renderRoutines(); announce('Task added'); });
   $('#autoForm').addEventListener('submit', e => { e.preventDefault(); const time = $('#autoTime').value, scene = $('#autoScene').value; if (!time) return; S.automations.push({ id: Date.now(), time, scene, on: true, last: '' }); S.automations.sort((a, b) => a.time.localeCompare(b.time)); save(); renderAutomations(); announce('Automation added'); });
-  $('#chatForm').addEventListener('submit', e => { e.preventDefault(); const i = $('#userInput'); const v = i.value; i.value = ''; handleInput(v, 'text'); });
+  $('#chatForm').addEventListener('submit', e => { e.preventDefault(); const v = DOM.userInput.value; DOM.userInput.value = ''; handleInput(v, 'text'); });
   $('#themeBtn').addEventListener('click', cycleTheme);
   const open = d => (d.showModal ? d.showModal() : d.setAttribute('open', ''));
   $('#settingsBtn').addEventListener('click', () => open($('#settingsDlg')));
@@ -809,7 +883,7 @@ function bind() {
     else if (e.altKey && e.code === 'KeyT') { e.preventDefault(); cycleTheme(); }
     else if (e.altKey && e.code === 'KeyC') { e.preventDefault(); $('#clearChat').click(); }
     else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !typing) { e.preventDefault(); undo(); }
-    else if (!typing && !e.ctrlKey && !e.metaKey && !e.altKey && e.key === '/') { e.preventDefault(); $('#userInput').focus(); }
+    else if (!typing && !e.ctrlKey && !e.metaKey && !e.altKey && e.key === '/') { e.preventDefault(); DOM.userInput.focus(); }
     else if (!typing && e.key === '?') { e.preventDefault(); open($('#helpDlg')); }
   });
 }
@@ -838,7 +912,7 @@ function runAutomations(now = new Date()) {
 }
 
 function init() {
-  buildStatic(); bind(); setupVoice();
+  cacheDOM(); buildStatic(); bind(); setupVoice();
   applyPrefs(); render(); renderRoutines(); renderAutomations(); renderLog();
   energyHist.push(watts(S.dev).total, watts(S.dev).total); renderEnergy();
   addMsg('system', 'Hi! Try "good night", "dim the kitchen to 30% and lock the door", or "is the door locked?". Nothing leaves your device.');
